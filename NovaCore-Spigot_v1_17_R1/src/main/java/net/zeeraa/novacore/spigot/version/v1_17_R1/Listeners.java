@@ -8,7 +8,6 @@ import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 
 import net.zeeraa.novacore.spigot.abstraction.events.VersionIndependantPlayerAchievementAwardedEvent;
 
-
 public class Listeners extends net.zeeraa.novacore.spigot.abstraction.Listeners implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = false)
 	public void onAchievement(PlayerAdvancementDoneEvent e) {
