@@ -155,7 +155,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 
 	@Override
 	public ItemStack getColoredItem(DyeColor color, ColoredBlockType type) {
-		return new ItemStack(getColoredItem(color, type));
+		return new ItemStack(getColoredMaterial(color, type));
 	}
 
 	@Override
