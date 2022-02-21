@@ -8,7 +8,8 @@ import org.bukkit.command.CommandMap;
 import org.bukkit.craftbukkit.v1_18_R1.CraftServer;
 
 /**
- * Based on this: https://bukkit.org/threads/register-command-without-plugin-yml.112932/#post-1430463
+ * Based on this:
+ * https://bukkit.org/threads/register-command-without-plugin-yml.112932/#post-1430463
  * 
  * @author Zeeraa
  */
