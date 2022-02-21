@@ -3,7 +3,6 @@ package net.zeeraa.novacore.spigot.version.v1_18_R1;
 import java.util.UUID;
 
 import org.bukkit.DyeColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
@@ -411,40 +410,33 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	}
 
 	@Override
-	public void playSound(Player player, Location location, VersionIndependantSound sound, float volume, float pitch) {
-		Sound realSound = null;
-
+	public Sound getSound(VersionIndependantSound sound) {
 		switch (sound) {
 		case NOTE_PLING:
-			realSound = Sound.BLOCK_NOTE_BLOCK_PLING;
-			break;
+			return Sound.BLOCK_NOTE_BLOCK_PLING;
 
 		case NOTE_HAT:
-			realSound = Sound.BLOCK_NOTE_BLOCK_HAT;
-			break;
+			return Sound.BLOCK_NOTE_BLOCK_HAT;
 
 		case WITHER_DEATH:
-			realSound = Sound.ENTITY_WITHER_DEATH;
-			break;
+			return Sound.ENTITY_WITHER_DEATH;
 
 		case WITHER_HURT:
-			realSound = Sound.ENTITY_WITHER_HURT;
-			break;
+			return Sound.ENTITY_WITHER_HURT;
 
 		case ITEM_BREAK:
-			realSound = Sound.ENTITY_ITEM_BREAK;
-			break;
+			return Sound.ENTITY_ITEM_BREAK;
 
 		case ORB_PICKUP:
-			realSound = Sound.ENTITY_EXPERIENCE_ORB_PICKUP;
-			break;
+			return Sound.ENTITY_EXPERIENCE_ORB_PICKUP;
 
+		case ANVIL_LAND:
+			return Sound.BLOCK_ANVIL_LAND;
+			
 		default:
 			System.err.println("[VersionIndependentUtils] VersionIndependantSound " + sound.name() + " is not defined in this version. Please add it to " + this.getClass().getName());
-			return;
+			return null;
 		}
-
-		player.playSound(location, realSound, volume, pitch);
 	}
 
 	@Override
