@@ -434,7 +434,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 			return Sound.BLOCK_ANVIL_LAND;
 
 		default:
-			System.err.println("[VersionIndependentUtils] VersionIndependantSound " + sound.name() + " is not defined in this version. Please add it to " + this.getClass().getName());
+			AbstractionLogger.getLogger().error("VersionIndependentUtils", "VersionIndependantSound " + sound.name() + " is not defined in this version. Please add it to " + this.getClass().getName());
 			return null;
 		}
 	}
@@ -477,14 +477,16 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	}
 
 	@Override
-	public ItemStack getItemStack(VersionIndependantMetarial material) {
+	public Material getMaterial(VersionIndependantMetarial material) {
 		switch (material) {
 		case FILLED_MAP:
-			ItemStack stack = new ItemStack(Material.FILLED_MAP);
-			return stack;
+			return Material.FILLED_MAP;
 
 		case END_STONE:
-			return new ItemStack(Material.END_STONE);
+			return Material.END_STONE;
+			
+		case WORKBENCH:
+			return Material.CRAFTING_TABLE;
 
 		default:
 			return null;
