@@ -432,7 +432,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 
 		case ANVIL_LAND:
 			return Sound.BLOCK_ANVIL_LAND;
-			
+
 		default:
 			AbstractionLogger.getLogger().error("VersionIndependentUtils", "VersionIndependantSound " + sound.name() + " is not defined in this version. Please add it to " + this.getClass().getName());
 			return null;
@@ -484,13 +484,13 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 
 		case END_STONE:
 			return Material.END_STONE;
-			
+
 		case WORKBENCH:
 			return Material.CRAFTING_TABLE;
 
 		case OAK_BOAT:
 			return Material.OAK_BOAT;
-			
+
 		default:
 			return null;
 		}
@@ -510,9 +510,22 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	public NovaCoreGameVersion getNovaCoreGameVersion() {
 		return NovaCoreGameVersion.V_1_18;
 	}
-	
+
 	@Override
 	public ItemStack getPlayerSkullitem() {
 		return new ItemStack(Material.PLAYER_HEAD, 1);
+	}
+
+	public static final Material[] SIGN_MATERIALS = { Material.ACACIA_SIGN, Material.ACACIA_WALL_SIGN, Material.BIRCH_SIGN, Material.BIRCH_WALL_SIGN, Material.CRIMSON_SIGN, Material.CRIMSON_WALL_SIGN, Material.DARK_OAK_SIGN, Material.DARK_OAK_WALL_SIGN, Material.JUNGLE_SIGN, Material.JUNGLE_WALL_SIGN, Material.OAK_SIGN, Material.OAK_WALL_SIGN, Material.SPRUCE_SIGN, Material.SPRUCE_WALL_SIGN, Material.WARPED_SIGN, Material.WARPED_WALL_SIGN };
+
+	@Override
+	public boolean isSign(Material material) {
+		for (Material m2 : SIGN_MATERIALS) {
+			if (material == m2) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }
