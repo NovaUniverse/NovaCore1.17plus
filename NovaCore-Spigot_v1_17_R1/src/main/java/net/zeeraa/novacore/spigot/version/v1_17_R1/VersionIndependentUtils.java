@@ -432,6 +432,9 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 
 		case ANVIL_LAND:
 			return Sound.BLOCK_ANVIL_LAND;
+			
+		case EXPLODE:
+			return Sound.ENTITY_GENERIC_EXPLODE;
 
 		default:
 			AbstractionLogger.getLogger().error("VersionIndependentUtils", "VersionIndependantSound " + sound.name() + " is not defined in this version. Please add it to " + this.getClass().getName());
