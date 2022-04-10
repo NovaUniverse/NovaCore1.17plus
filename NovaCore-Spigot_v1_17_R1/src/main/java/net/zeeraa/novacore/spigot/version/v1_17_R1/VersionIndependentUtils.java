@@ -27,6 +27,8 @@ import net.zeeraa.novacore.spigot.abstraction.enums.PlayerDamageReason;
 import net.zeeraa.novacore.spigot.abstraction.enums.VersionIndependantMetarial;
 import net.zeeraa.novacore.spigot.abstraction.enums.VersionIndependantSound;
 import net.zeeraa.novacore.spigot.abstraction.log.AbstractionLogger;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.server.MinecraftServer;
 import net.zeeraa.novacore.spigot.abstraction.ItemBuilderRecordList;
 import net.zeeraa.novacore.spigot.abstraction.LabyModProtocol;
@@ -432,7 +434,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 
 		case ANVIL_LAND:
 			return Sound.BLOCK_ANVIL_LAND;
-			
+
 		case EXPLODE:
 			return Sound.ENTITY_GENERIC_EXPLODE;
 
@@ -530,5 +532,10 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		}
 
 		return false;
+	}
+
+	@Override
+	public void sendActionBarMessage(Player player, String message) {
+		player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
 	}
 }
