@@ -496,7 +496,14 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		case OAK_BOAT:
 			return Material.OAK_BOAT;
 
+		case DIAMOND_SHOVEL:
+			return Material.DIAMOND_SHOVEL;
+			
+		case SNOWBALL:
+			return Material.SNOWBALL;
+			
 		default:
+			AbstractionLogger.getLogger().warning("VersionIndependentUtils", "Unknown version Independent meterial: " + material.name());
 			return null;
 		}
 	}
