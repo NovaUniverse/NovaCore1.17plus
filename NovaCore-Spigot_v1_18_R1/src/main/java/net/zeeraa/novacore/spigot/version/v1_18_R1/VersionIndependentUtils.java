@@ -502,6 +502,9 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		case SNOWBALL:
 			return Material.SNOWBALL;
 			
+		case FARMLAND:
+			return Material.FARMLAND;
+			
 		default:
 			AbstractionLogger.getLogger().warning("VersionIndependentUtils", "Unknown version Independent material: " + material.name());
 			return null;
