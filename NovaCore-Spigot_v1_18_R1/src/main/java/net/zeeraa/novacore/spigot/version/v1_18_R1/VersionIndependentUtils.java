@@ -428,6 +428,9 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 
 		case ITEM_BREAK:
 			return Sound.ENTITY_ITEM_BREAK;
+			
+		case ITEM_PICKUP:
+			return Sound.ENTITY_ITEM_PICKUP;
 
 		case ORB_PICKUP:
 			return Sound.ENTITY_EXPERIENCE_ORB_PICKUP;
