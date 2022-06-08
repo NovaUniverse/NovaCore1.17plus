@@ -519,6 +519,36 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		case FARMLAND:
 			return Material.FARMLAND;
 			
+		case GOLDEN_AXE:
+			return Material.GOLDEN_AXE;
+			
+		case GOLDEN_HOE:
+			return Material.GOLDEN_HOE;
+			
+		case GOLDEN_PICKAXE:
+			return Material.GOLDEN_PICKAXE;
+			
+		case GOLDEN_SHOVEL:
+			return Material.GOLDEN_SHOVEL;
+			
+		case GOLDEN_SWORD:
+			return Material.GOLDEN_SWORD;
+			
+		case WOODEN_AXE:
+			return Material.WOODEN_AXE;
+			
+		case WOODEN_HOE:
+			return Material.WOODEN_HOE;
+			
+		case WOODEN_PICKAXE:
+			return Material.WOODEN_PICKAXE;
+			
+		case WOODEN_SHOVEL:
+			return Material.WOODEN_SHOVEL;
+			
+		case WOODEN_SWORD:
+			return Material.WOODEN_SWORD;
+			
 		default:
 			AbstractionLogger.getLogger().warning("VersionIndependentUtils", "Unknown version Independent material: " + material.name());
 			return null;
