@@ -551,4 +551,9 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	public void sendActionBarMessage(Player player, String message) {
 		player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));		
 	}
+
+	@Override
+	public int getMinY() {
+		return -64;
+	}
 }
