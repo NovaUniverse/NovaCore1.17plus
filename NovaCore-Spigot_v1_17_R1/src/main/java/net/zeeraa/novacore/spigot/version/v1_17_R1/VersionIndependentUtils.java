@@ -30,12 +30,23 @@ import net.zeeraa.novacore.spigot.abstraction.log.AbstractionLogger;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.server.MinecraftServer;
+import net.zeeraa.novacore.spigot.abstraction.ChunkLoader;
 import net.zeeraa.novacore.spigot.abstraction.ItemBuilderRecordList;
 import net.zeeraa.novacore.spigot.abstraction.LabyModProtocol;
 
 public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstraction.VersionIndependantUtils {
 	private ItemBuilderRecordList itemBuilderRecordList;
 	private boolean damagePlayerWarningShown = false;
+	
+	private ChunkLoader chunkLoader;
+
+	@Override
+	public ChunkLoader getChunkLoader() {
+		if (chunkLoader == null) {
+			chunkLoader = new ChunkLoaderImplementation();
+		}
+		return chunkLoader;
+	}
 
 	public VersionIndependentUtils() {
 		itemBuilderRecordList = new ItemBuilderRecordListv1_17();
