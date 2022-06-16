@@ -600,4 +600,9 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	public int getMinY() {
 		return 0;
 	}
+	
+	@Override
+	public void setUnbreakable(ItemMeta meta, boolean unbreakable) {
+		meta.setUnbreakable(unbreakable);
+	}
 }
