@@ -612,4 +612,11 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	public void setCreatureItemInMainHand(Creature creature, ItemStack item) {
 		creature.getEquipment().setItemInMainHand(item);
 	}
+	
+	@Override
+	public float getPlayerBodyRotation(Player player) {
+		// TODO Auto-generated method stub
+		AbstractionLogger.getLogger().warning("VersionIndependentUtils", "getPlayerBodyRotation(player) is not implemented for this version");
+		return 0;
+	}
 }
