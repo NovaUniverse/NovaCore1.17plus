@@ -619,4 +619,9 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		AbstractionLogger.getLogger().warning("VersionIndependentUtils", "getPlayerBodyRotation(player) is not implemented for this version");
 		return 0;
 	}
+
+	@Override
+	public void setCustomModelData(ItemMeta meta, int data) {
+		meta.setCustomModelData(data);
+	}
 }
