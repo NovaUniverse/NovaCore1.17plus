@@ -11,6 +11,8 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
@@ -630,5 +632,10 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	@Override
 	public void setGameRule(World world, String rule, String value) {
 		world.setGameRuleValue(rule, value);
+	}
+	
+	@Override
+	public boolean isInteractEventMainHand(PlayerInteractEvent e) {
+		return e.getHand() == EquipmentSlot.HEAD;
 	}
 }
