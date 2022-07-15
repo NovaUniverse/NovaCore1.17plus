@@ -36,6 +36,7 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.EntityPlayer;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import net.zeeraa.novacore.spigot.abstraction.ChunkLoader;
 import net.zeeraa.novacore.spigot.abstraction.ItemBuilderRecordList;
 import net.zeeraa.novacore.spigot.abstraction.LabyModProtocol;
@@ -627,9 +628,9 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	}
 
 	@Override
-	public float getPlayerBodyRotation(EntityPlayer player) {
-		// TODO Auto-generated method stub
-		return player.aY;
+	public float getPlayerBodyRotation(Player player) {
+		CraftPlayer craftPlayer = (CraftPlayer) player;
+		return craftPlayer.getHandle().aY;
 	}
 
 	@Override
