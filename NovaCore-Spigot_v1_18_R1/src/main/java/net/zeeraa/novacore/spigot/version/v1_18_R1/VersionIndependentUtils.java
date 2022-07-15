@@ -35,7 +35,6 @@ import net.zeeraa.novacore.spigot.abstraction.log.AbstractionLogger;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.EntityPlayer;
 import net.zeeraa.novacore.spigot.abstraction.ChunkLoader;
 import net.zeeraa.novacore.spigot.abstraction.ItemBuilderRecordList;
 import net.zeeraa.novacore.spigot.abstraction.LabyModProtocol;
