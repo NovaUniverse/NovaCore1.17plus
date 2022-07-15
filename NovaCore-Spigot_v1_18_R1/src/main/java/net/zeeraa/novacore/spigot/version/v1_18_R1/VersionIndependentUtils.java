@@ -629,7 +629,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	}
 	
 	@Override
-	public float getPlayerBodyRotation(EntityPlayer player) {
+	public float getPlayerBodyRotation(Player player) {
 		CraftPlayer craftPlayer = (CraftPlayer) player;
 		return craftPlayer.getHandle().aY;
 	}
