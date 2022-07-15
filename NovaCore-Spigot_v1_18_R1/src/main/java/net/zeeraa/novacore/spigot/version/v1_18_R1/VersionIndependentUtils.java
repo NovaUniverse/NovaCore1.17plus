@@ -39,6 +39,7 @@ import net.minecraft.server.level.EntityPlayer;
 import net.zeeraa.novacore.spigot.abstraction.ChunkLoader;
 import net.zeeraa.novacore.spigot.abstraction.ItemBuilderRecordList;
 import net.zeeraa.novacore.spigot.abstraction.LabyModProtocol;
+import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
 
 
 public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstraction.VersionIndependentUtils {
@@ -629,8 +630,8 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	
 	@Override
 	public float getPlayerBodyRotation(EntityPlayer player) {
-		// TODO Auto-generated method stub
-		return player.aY;
+		CraftPlayer craftPlayer = (CraftPlayer) player;
+		return craftPlayer.getHandle().aY;
 	}
 
 	@Override
