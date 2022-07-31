@@ -43,8 +43,8 @@
 		</repository>
 
 		<repository>
-			<id>zeeraas-repo</id>
-			<url>https://nexus.zeeraa.net/repository/maven-group/</url>
+			<id>novauniverse2</id>
+			<url>https://nexus2.novauniverse.net/repository/novauniverse-group/</url>
 		</repository>
 
 		<repository>
@@ -65,8 +65,7 @@
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot</artifactId>
 			<version>1.18.1-R0.1-SNAPSHOT</version>
-			<scope>system</scope>
-			<systemPath>C:/maven_dependencies/spigot-1.18.1-R0.1-SNAPSHOT.jar</systemPath>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -89,7 +88,6 @@
 			<version>4.1.77.Final</version>
 			<scope>provided</scope>
 		</dependency>
-
 
 		<dependency>
 			<groupId>org.json</groupId>

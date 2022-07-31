@@ -105,8 +105,8 @@
 		</repository>
 
 		<repository>
-			<id>zeeraas-repo</id>
-			<url>https://nexus.zeeraa.net/repository/maven-group/</url>
+			<id>novauniverse2</id>
+			<url>https://nexus2.novauniverse.net/repository/novauniverse-group/</url>
 		</repository>
 	</repositories>
 

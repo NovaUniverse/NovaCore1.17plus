@@ -23,12 +23,12 @@
 	
 	<distributionManagement>
 		<snapshotRepository>
-			<id>zeeraas-snapshots</id>
-			<url>https://nexus.zeeraa.net/repository/maven-snapshots/</url>
+			<id>novauniverse2-snapshot</id>
+			<url>https://nexus2.novauniverse.net/repository/novauniverse/</url>
 		</snapshotRepository>
 		<repository>
-			<id>zeeraas-releases</id>
-			<url>https://nexus.zeeraa.net/repository/maven-releases/</url>
+			<id>novauniverse2</id>
+			<url>https://nexus2.novauniverse.net/repository/novauniverse/</url>
 		</repository>
 	</distributionManagement>
 	
