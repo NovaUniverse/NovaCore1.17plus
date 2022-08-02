@@ -37,6 +37,7 @@ import net.zeeraa.novacore.spigot.abstraction.log.AbstractionLogger;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.server.MinecraftServer;
+import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17;
 import net.zeeraa.novacore.spigot.abstraction.ChunkLoader;
 import net.zeeraa.novacore.spigot.abstraction.ItemBuilderRecordList;
 import net.zeeraa.novacore.spigot.abstraction.LabyModProtocol;
@@ -659,5 +660,15 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	@Override
 	public Entity getEntityByUUID(UUID uuid) {
 		return Bukkit.getEntity(uuid);
+	}
+
+	@Override
+	public void setShapedRecipeIngredientAsDye(ShapedRecipe recipe, char ingredient, DyeColor color) {
+		recipe.setIngredient(ingredient, DyeColorToMaterialMapper_1_17.dyeColorToMaterial(color));
+	}
+
+	@Override
+	public void addShapelessRecipeIngredientAsDye(ShapelessRecipe recipe, int count, DyeColor color) {
+		recipe.addIngredient(count, DyeColorToMaterialMapper_1_17.dyeColorToMaterial(color));
 	}
 }

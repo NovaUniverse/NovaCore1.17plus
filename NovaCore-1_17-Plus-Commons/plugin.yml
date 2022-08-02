@@ -1,0 +1,7 @@
+name: NovaCore1_17Plus
+main: net.novauniverse.novacore1_17plus.NovaCore1_17Plus
+description: Add support for versions 1.17 and up
+version: 1.0.0
+api-version: 1.17
+
+loadbefore: [NovaCore]

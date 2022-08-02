@@ -46,7 +46,7 @@
 			<id>novauniverse2</id>
 			<url>https://nexus2.novauniverse.net/repository/novauniverse-group/</url>
 		</repository>
-		
+
 		<repository>
 			<id>minecraft-repo</id>
 			<url>https://libraries.minecraft.net/</url>
@@ -54,6 +54,13 @@
 	</repositories>
 
 	<dependencies>
+		<dependency>
+			<groupId>net.novauniverse.novacore</groupId>
+			<artifactId>NovaCore-1_17-Plus-Commons</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>net.novauniverse.novacore</groupId>
 			<artifactId>novacore-spigot-abstraction</artifactId>

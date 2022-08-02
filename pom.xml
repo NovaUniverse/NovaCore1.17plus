@@ -33,6 +33,7 @@
 	</distributionManagement>
 	
 	<modules>
+		<module>NovaCore-1_17-Plus-Commons</module>
 		<module>NovaCore-Spigot_v1_17_R1</module>
 		<module>NovaCore-Spigot_v1_18_R1</module>
 		<module>NovaCore-Spigot_v1_18_R2</module>
