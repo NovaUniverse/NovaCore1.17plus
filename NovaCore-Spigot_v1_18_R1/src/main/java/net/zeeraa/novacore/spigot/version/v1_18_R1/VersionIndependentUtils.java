@@ -404,6 +404,76 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 				material = Material.AIR;
 				break;
 			}
+		} else if (type == ColoredBlockType.CLAY) {
+			switch (color) {
+			case BLACK:
+				material = Material.BLACK_TERRACOTTA;
+				break;
+
+			case BLUE:
+				material = Material.BLUE_TERRACOTTA;
+				break;
+
+			case BROWN:
+				material = Material.BROWN_TERRACOTTA;
+				break;
+
+			case CYAN:
+				material = Material.CYAN_TERRACOTTA;
+				break;
+
+			case GRAY:
+				material = Material.LIGHT_GRAY_TERRACOTTA;
+				break;
+
+			case GREEN:
+				material = Material.GREEN_TERRACOTTA;
+				break;
+
+			case LIGHT_BLUE:
+				material = Material.LIGHT_BLUE_TERRACOTTA;
+				break;
+
+			case LIGHT_GRAY:
+				material = Material.LIGHT_GRAY_TERRACOTTA;
+				break;
+
+			case LIME:
+				material = Material.LIME_TERRACOTTA;
+				break;
+
+			case MAGENTA:
+				material = Material.MAGENTA_TERRACOTTA;
+				break;
+
+			case ORANGE:
+				material = Material.ORANGE_TERRACOTTA;
+				break;
+
+			case PINK:
+				material = Material.PINK_TERRACOTTA;
+				break;
+
+			case PURPLE:
+				material = Material.PURPLE_TERRACOTTA;
+				break;
+
+			case RED:
+				material = Material.RED_TERRACOTTA;
+				break;
+
+			case YELLOW:
+				material = Material.YELLOW_TERRACOTTA;
+				break;
+
+			case WHITE:
+				material = Material.WHITE_TERRACOTTA;
+				break;
+
+			default:
+				material = Material.AIR;
+				break;
+			}
 		} else {
 			material = Material.AIR;
 		}
