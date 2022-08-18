@@ -750,4 +750,9 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	public void setAI(LivingEntity entity, boolean ai) {
 		entity.setAI(ai);
 	}
+
+	@Override
+	public void setSilent(LivingEntity entity, boolean silent) {
+		entity.setSilent(silent);
+	}
 }
