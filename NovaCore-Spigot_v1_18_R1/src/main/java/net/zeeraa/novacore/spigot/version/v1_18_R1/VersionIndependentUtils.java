@@ -1,18 +1,17 @@
 package net.zeeraa.novacore.spigot.version.v1_18_R1;
 
+import java.util.Collections;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
-import org.bukkit.DyeColor;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.World;
+import net.zeeraa.novacore.spigot.abstraction.commons.LoopableIterator;
+import net.zeeraa.novacore.spigot.abstraction.enums.*;
+import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Creature;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
+import org.bukkit.event.entity.EntityDamageByBlockEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -27,12 +26,6 @@ import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 
 import net.zeeraa.novacore.spigot.abstraction.VersionIndependentItems;
-import net.zeeraa.novacore.spigot.abstraction.enums.ColoredBlockType;
-import net.zeeraa.novacore.spigot.abstraction.enums.NovaCoreGameVersion;
-import net.zeeraa.novacore.spigot.abstraction.enums.PlayerDamageReason;
-import net.zeeraa.novacore.spigot.abstraction.enums.VersionIndependenceLayerError;
-import net.zeeraa.novacore.spigot.abstraction.enums.VersionIndependentMaterial;
-import net.zeeraa.novacore.spigot.abstraction.enums.VersionIndependentSound;
 import net.zeeraa.novacore.spigot.abstraction.log.AbstractionLogger;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -757,5 +750,224 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	@Override
 	public void setSilent(LivingEntity entity, boolean silent) {
 		entity.setSilent(silent);
+	}
+
+	@Override
+	public DeathType getDeathTypeFromDamage(EntityDamageEvent e, Entity lastDamager) {
+		switch (e.getCause()) {
+			case FIRE:
+				if (lastDamager != null)
+					return DeathType.FIRE_SOURCE_COMBAT;
+				return DeathType.FIRE_SOURCE;
+			case LAVA:
+				if (lastDamager != null)
+					return DeathType.LAVA_COMBAT;
+				return DeathType.LAVA;
+			case FALL:
+				if (e.getOriginalDamage(EntityDamageEvent.DamageModifier.BASE) <= 2.0) {
+					if (lastDamager != null)
+						return DeathType.FALL_SMALL_COMBAT;
+					return DeathType.FALL_SMALL;
+				} else {
+					return DeathType.FALL_BIG;
+				}
+			case VOID:
+				if (lastDamager != null)
+					return DeathType.VOID_COMBAT;
+				return DeathType.VOID;
+
+			case THORNS:
+				return DeathType.THORNS;
+			case WITHER:
+				if (lastDamager != null)
+					return DeathType.EFFECT_WITHER_COMBAT;
+				return DeathType.EFFECT_WITHER;
+
+			case CONTACT:
+				if (e instanceof EntityDamageByBlockEvent) {
+					EntityDamageByBlockEvent blockEvent = (EntityDamageByBlockEvent) e;
+					if (lastDamager != null) {
+						if (blockEvent.getDamager().getType() == Material.SWEET_BERRY_BUSH)
+							return DeathType.BUSH_COMBAT;
+						else if (blockEvent.getDamager().getType() == Material.CACTUS)
+							return DeathType.CACTUS_COMBAT;
+						else if (blockEvent.getDamager().getType() == Material.POINTED_DRIPSTONE)
+							return DeathType.FALL_STALAGMITE_COMBAT;
+					} else {
+						if (blockEvent.getDamager().getType() == Material.SWEET_BERRY_BUSH)
+							return DeathType.BUSH;
+						else if (blockEvent.getDamager().getType() == Material.CACTUS)
+							return DeathType.CACTUS;
+						else if (blockEvent.getDamager().getType() == Material.POINTED_DRIPSTONE)
+							return DeathType.FALL_STALAGMITE;
+					}
+				}
+			case DROWNING:
+				if (lastDamager != null)
+					return DeathType.DROWN_COMBAT;
+				return DeathType.DROWN;
+
+			case LIGHTNING:
+				if (lastDamager != null)
+					return DeathType.LIGHTNING_COMBAT;
+				return DeathType.LIGHTNING;
+
+			case PROJECTILE:
+				if (lastDamager.getType() == EntityType.ARROW) {
+					return DeathType.PROJECTILE_ARROW;
+				}
+				return DeathType.PROJECTILE_OTHER;
+			case STARVATION:
+				if (lastDamager != null)
+					return DeathType.STARVING_COMBAT;
+				return DeathType.STARVING;
+
+			case SUFFOCATION:
+				if (lastDamager != null)
+					return DeathType.SUFFOCATION_COMBAT;
+				return DeathType.SUFFOCATION;
+			case ENTITY_ATTACK:
+			case ENTITY_SWEEP_ATTACK:
+				switch (lastDamager.getType()) {
+					case WITHER:
+						return DeathType.COMBAT_WITHER;
+					case FIREBALL:
+					case SMALL_FIREBALL:
+						return DeathType.COMBAT_FIREBALL;
+					case BEE:
+						return DeathType.COMBAT_BEE;
+					default:
+						return DeathType.COMBAT_NORMAL;
+				}
+			case FALLING_BLOCK:
+				if (e instanceof EntityDamageByEntityEvent) {
+					EntityDamageByEntityEvent entityEvent = (EntityDamageByEntityEvent) e;
+					if (entityEvent.getDamager() instanceof FallingBlock) {
+						FallingBlock block = (FallingBlock) entityEvent.getDamager();
+						switch (block.getBlockData().getMaterial()) {
+							case ANVIL:
+								if (lastDamager != null)
+									return DeathType.ANVIL_FALL_COMBAT;
+								return DeathType.ANVIL_FALL;
+							case POINTED_DRIPSTONE:
+								if (lastDamager != null)
+									return DeathType.STALAGTITE_FALL_COMBAT;
+								return DeathType.STALAGTITE_FALL;
+							default:
+								if (lastDamager != null)
+									return DeathType.BLOCK_FALL_COMBAT;
+								return DeathType.BLOCK_FALL;
+						}
+					}
+				}
+			case BLOCK_EXPLOSION:
+			case ENTITY_EXPLOSION:
+				if (lastDamager != null)
+					return DeathType.EXPLOSION_COMBAT;
+				return DeathType.EXPLOSION;
+
+			case FIRE_TICK:
+				if (lastDamager != null)
+					return DeathType.FIRE_NATURAL_COMBAT;
+				return DeathType.FIRE_NATURAL;
+
+			case MAGIC:
+				if (lastDamager != null) {
+					if (lastDamager instanceof ThrownPotion) {
+						ThrownPotion potion = (ThrownPotion) lastDamager;
+						if (potion.getShooter() instanceof Entity) {
+							Entity thrower = (Entity) potion.getShooter();
+							Entity finalDamager = null;
+							if (e.getEntity() instanceof Player) {
+								if (((Player) e.getEntity()).getKiller() == null) {
+									finalDamager = thrower;
+								} else {
+									finalDamager = ((Player) e.getEntity()).getKiller();
+								}
+							}
+							if (thrower.getUniqueId().toString().equalsIgnoreCase(finalDamager.getUniqueId().toString())) {
+								return DeathType.MAGIC_COMBAT;
+							} else {
+								return DeathType.MAGIC_COMBAT_ACCIDENT;
+							}
+						} else {
+							return DeathType.MAGIC_COMBAT_ACCIDENT;
+						}
+					}
+				} else {
+					return DeathType.MAGIC;
+				}
+			case CRAMMING:
+				if (lastDamager != null)
+					return DeathType.SUFFOCATION_CRAMMING_COMBAT;
+				return DeathType.SUFFOCATION_COMBAT;
+
+			case HOT_FLOOR:
+				if (lastDamager != null)
+					return DeathType.MAGMA_BLOCK_COMBAT;
+				return DeathType.MAGMA_BLOCK;
+
+			case DRAGON_BREATH:
+				if (lastDamager != null)
+					return DeathType.DRAGON_BREATH_COMBAT;
+				return DeathType.DRAGON_BREATH;
+			case FLY_INTO_WALL:
+				if (lastDamager != null)
+					return DeathType.ELYTRA_WALL_COMBAT;
+				return DeathType.ELYTRA_WALL;
+			case FREEZE:
+				if (lastDamager != null)
+					return DeathType.FROZEN_COMBAT;
+				return DeathType.FROZEN;
+			case SUICIDE:
+			case DRYOUT:
+			case CUSTOM:
+			case MELTING:
+			case POISON:
+			default:
+				if (lastDamager != null)
+					return DeathType.GENERIC_COMBAT;
+				return DeathType.GENERIC;
+		}
+	}
+
+	@Override
+	public String colorize(Color color, String message) {
+		String thing = "&x" +
+				asChatColor(color.getRed() + "" + color.getGreen() + "" + color.getBlue()) +
+				message;
+
+		return org.bukkit.ChatColor.translateAlternateColorCodes('&', thing);
+	}
+
+	@Override
+	public String colorizeGradient(Color[] colors, String message) {
+		StringBuilder builder = new StringBuilder();
+		for (int i = 0; i < message.length(); i++) {
+			builder.append(asChatColor(colors[i].getRed() + "" + colors[i].getGreen() + "" + colors[i].getBlue())).append(message.toCharArray()[i]);
+		}
+		return builder.toString();
+	}
+
+	@Override
+	public String colorizeRainbow(Color[] colors, int charsPerColor, String message) {
+		LoopableIterator<Color> iterator = new LoopableIterator<>();
+		Collections.addAll(iterator, colors);
+		StringBuilder finalBuild = new StringBuilder();
+		for (int i = 0; i < message.length(); i++) {
+
+			if (i % charsPerColor == 0) {
+				finalBuild.append(colorize(iterator.next(), message.toCharArray()[i] + ""));
+			} else {
+				finalBuild.append(message.toCharArray()[i]);
+			}
+
+		}
+		return finalBuild.toString();
+	}
+
+	@Override
+	public String asChatColor(String rgb) {
+		return net.md_5.bungee.api.ChatColor.of(rgb).toString();
 	}
 }
