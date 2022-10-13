@@ -642,6 +642,18 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 
 		case WATCH:
 			return Material.CLOCK;
+			
+		case GOLD_HELMET:
+			return Material.GOLDEN_HELMET;
+			
+		case GOLD_CHESTPLATE:
+			return Material.GOLDEN_CHESTPLATE;
+			
+		case GOLD_LEGGINGS:
+			return Material.GOLDEN_LEGGINGS;
+			
+		case GOLD_BOOTS:
+			return Material.GOLDEN_BOOTS;
 
 		default:
 			setLastError(VersionIndependenceLayerError.MISSING_MATERIAL);
@@ -751,6 +763,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		entity.setSilent(silent);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public DeathType getDeathTypeFromDamage(EntityDamageEvent e, Entity lastDamager) {
 		switch (e.getCause()) {
