@@ -3,7 +3,6 @@ package net.zeeraa.novacore.spigot.version.v1_17_R1;
 import java.util.Collections;
 import java.util.UUID;
 
-import net.zeeraa.novacore.spigot.abstraction.commons.LoopableIterator;
 import net.zeeraa.novacore.spigot.abstraction.enums.*;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -33,6 +32,8 @@ import net.minecraft.server.MinecraftServer;
 import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17;
 
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
+
+import net.zeeraa.novacore.commons.utils.LoopableIterator;
 import net.zeeraa.novacore.spigot.abstraction.ChunkLoader;
 import net.zeeraa.novacore.spigot.abstraction.ItemBuilderRecordList;
 import net.zeeraa.novacore.spigot.abstraction.LabyModProtocol;
