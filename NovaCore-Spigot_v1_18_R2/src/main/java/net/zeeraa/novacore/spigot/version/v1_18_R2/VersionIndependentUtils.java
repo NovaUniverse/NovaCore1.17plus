@@ -3,7 +3,6 @@ package net.zeeraa.novacore.spigot.version.v1_18_R2;
 import java.util.Collections;
 import java.util.UUID;
 
-import net.zeeraa.novacore.spigot.abstraction.commons.LoopableIterator;
 import net.zeeraa.novacore.spigot.abstraction.enums.*;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -31,9 +30,11 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.server.MinecraftServer;
 import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17;
+import net.zeeraa.novacore.commons.utils.LoopableIterator;
 import net.zeeraa.novacore.spigot.abstraction.ChunkLoader;
 import net.zeeraa.novacore.spigot.abstraction.ItemBuilderRecordList;
 import net.zeeraa.novacore.spigot.abstraction.LabyModProtocol;
+
 import org.bukkit.craftbukkit.v1_18_R2.entity.CraftPlayer;
 
 public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstraction.VersionIndependentUtils {
@@ -979,5 +980,10 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	@Override
 	public String asChatColor(String rgb) {
 		return net.md_5.bungee.api.ChatColor.of(rgb).toString();
+	}
+	
+	@Override
+	public boolean canBreakBlock(ItemStack item, Material block) {
+		return false;
 	}
 }

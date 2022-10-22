@@ -1,9 +1,10 @@
 package net.zeeraa.novacore.spigot.version.v1_18_R1;
 
+import java.lang.reflect.Field;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
-import net.zeeraa.novacore.spigot.abstraction.commons.LoopableIterator;
 import net.zeeraa.novacore.spigot.abstraction.enums.*;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -29,12 +30,17 @@ import net.zeeraa.novacore.spigot.abstraction.VersionIndependentItems;
 import net.zeeraa.novacore.spigot.abstraction.log.AbstractionLogger;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17;
+import net.zeeraa.novacore.commons.utils.LoopableIterator;
 import net.zeeraa.novacore.spigot.abstraction.ChunkLoader;
 import net.zeeraa.novacore.spigot.abstraction.ItemBuilderRecordList;
 import net.zeeraa.novacore.spigot.abstraction.LabyModProtocol;
+
 import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
 
 
 public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstraction.VersionIndependentUtils {
@@ -980,5 +986,28 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	@Override
 	public String asChatColor(String rgb) {
 		return net.md_5.bungee.api.ChatColor.of(rgb).toString();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean canBreakBlock(ItemStack item, Material block) {
+		net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
+		NBTTagCompound nbtTag = nmsItem.s();
+		NBTTagList list = nbtTag.c("CanDestroy", 8);
+		if (list == null) {
+			return false;
+		}
+		try {
+			Field f = NBTTagList.class.getDeclaredField("list");
+			f.setAccessible(true);
+
+			for (NBTTagCompound nbt : (List<NBTTagCompound>) f.get(list)) {
+				return Material.matchMaterial(nbt.toString()) == block;
+			}
+		} catch (Exception ignored) {
+			return false;
+		}
+
+		return false;
 	}
 }
