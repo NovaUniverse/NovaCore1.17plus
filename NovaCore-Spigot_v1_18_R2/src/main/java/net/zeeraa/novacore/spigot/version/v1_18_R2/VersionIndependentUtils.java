@@ -1,8 +1,6 @@
 package net.zeeraa.novacore.spigot.version.v1_18_R2;
 
-import java.lang.reflect.Field;
 import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
 import net.zeeraa.novacore.spigot.abstraction.enums.*;
@@ -30,8 +28,6 @@ import net.zeeraa.novacore.spigot.abstraction.VersionIndependentItems;
 import net.zeeraa.novacore.spigot.abstraction.log.AbstractionLogger;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17;
 import net.zeeraa.novacore.commons.utils.LoopableIterator;
@@ -40,7 +36,6 @@ import net.zeeraa.novacore.spigot.abstraction.ItemBuilderRecordList;
 import net.zeeraa.novacore.spigot.abstraction.LabyModProtocol;
 
 import org.bukkit.craftbukkit.v1_18_R2.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
 
 public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstraction.VersionIndependentUtils {
 	private ItemBuilderRecordList itemBuilderRecordList;
