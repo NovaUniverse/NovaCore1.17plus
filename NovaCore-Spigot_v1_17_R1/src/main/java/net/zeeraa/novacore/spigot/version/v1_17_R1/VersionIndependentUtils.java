@@ -3,12 +3,21 @@ package net.zeeraa.novacore.spigot.version.v1_17_R1;
 import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
+import net.zeeraa.novacore.commons.utils.LoopableIterator;
+import net.zeeraa.novacore.spigot.abstraction.*;
+
 import net.zeeraa.novacore.spigot.abstraction.enums.*;
+import net.zeeraa.novacore.spigot.abstraction.packet.PacketManager;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -26,7 +35,6 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 
-import net.zeeraa.novacore.spigot.abstraction.VersionIndependentItems;
 import net.zeeraa.novacore.spigot.abstraction.log.AbstractionLogger;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -36,16 +44,11 @@ import net.minecraft.server.MinecraftServer;
 import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17;
 
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
-
-import net.zeeraa.novacore.commons.utils.LoopableIterator;
-import net.zeeraa.novacore.spigot.abstraction.ChunkLoader;
-import net.zeeraa.novacore.spigot.abstraction.ItemBuilderRecordList;
-import net.zeeraa.novacore.spigot.abstraction.LabyModProtocol;
 
 public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstraction.VersionIndependentUtils {
 	private ItemBuilderRecordList itemBuilderRecordList;
 	private boolean damagePlayerWarningShown = false;
+	private PacketManager packetManager;
 
 	private ChunkLoader chunkLoader;
 
@@ -62,7 +65,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	}
 
 	@Override
-	public ItemBuilderRecordList getItembBuilderRecordList() {
+	public ItemBuilderRecordList getItemBuilderRecordList() {
 		return itemBuilderRecordList;
 	}
 
@@ -856,14 +859,63 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		case ENTITY_SWEEP_ATTACK:
 			switch (lastDamager.getType()) {
 			case WITHER:
-				return DeathType.COMBAT_WITHER;
-			case FIREBALL:
-			case SMALL_FIREBALL:
-				return DeathType.COMBAT_FIREBALL;
-			case BEE:
-				return DeathType.COMBAT_BEE;
-			default:
-				return DeathType.COMBAT_NORMAL;
+				if (lastDamager != null)
+					return DeathType.EFFECT_WITHER_COMBAT;
+				return DeathType.EFFECT_WITHER;
+
+			case CONTACT:
+				if (e instanceof EntityDamageByBlockEvent) {
+					EntityDamageByBlockEvent blockEvent = (EntityDamageByBlockEvent) e;
+					if (lastDamager != null) {
+						if (blockEvent.getDamager().getType() == Material.SWEET_BERRY_BUSH)
+							return DeathType.BUSH_COMBAT;
+						else if (blockEvent.getDamager().getType() == Material.CACTUS)
+							return DeathType.CACTUS_COMBAT;
+						else if (blockEvent.getDamager().getType() == Material.POINTED_DRIPSTONE)
+							return DeathType.FALL_STALAGMITE_COMBAT;
+					} else {
+						if (blockEvent.getDamager().getType() == Material.SWEET_BERRY_BUSH)
+							return DeathType.BUSH;
+						else if (blockEvent.getDamager().getType() == Material.CACTUS)
+							return DeathType.CACTUS;
+						else if (blockEvent.getDamager().getType() == Material.POINTED_DRIPSTONE)
+							return DeathType.FALL_STALAGMITE;
+					}
+				}
+			case DROWNING:
+				if (lastDamager != null)
+					return DeathType.DROWN_COMBAT;
+				return DeathType.DROWN;
+
+			case LIGHTNING:
+				if (lastDamager != null)
+					return DeathType.LIGHTNING_COMBAT;
+				return DeathType.LIGHTNING;
+
+			case PROJECTILE:
+				if (lastDamager.getType() == EntityType.ARROW) {
+					return DeathType.PROJECTILE_ARROW;
+				}
+				return DeathType.PROJECTILE_OTHER;
+			case STARVATION:
+				if (lastDamager != null)
+					return DeathType.STARVING_COMBAT;
+				return DeathType.STARVING;
+
+			case SUFFOCATION:
+				if (lastDamager != null)
+					return DeathType.SUFFOCATION_COMBAT;
+				return DeathType.SUFFOCATION;
+			case ENTITY_ATTACK:
+			case ENTITY_SWEEP_ATTACK:
+				switch (lastDamager.getType()) {
+					case WITHER:
+						return DeathType.COMBAT_WITHER_SKULL;
+					case FIREBALL:
+					case SMALL_FIREBALL:
+						return DeathType.COMBAT_FIREBALL;
+					case BEE:
+						return DeathType.COMBAT_BEE;
 			}
 		case FALLING_BLOCK:
 			if (e instanceof EntityDamageByEntityEvent) {
@@ -987,26 +1039,56 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		return net.md_5.bungee.api.ChatColor.of(rgb).toString();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public boolean canBreakBlock(ItemStack item, Material block) {
-		net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
+	public PacketManager getPacketManager() {
+		if (packetManager == null) packetManager = new net.zeeraa.novacore.spigot.version.v1_17_R1.packet.PacketManager();
+		return packetManager;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public boolean canBreakBlock(ItemStack itemStack, Material material) {
+		net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(itemStack);
 		NBTTagCompound nbtTag = nmsItem.getTag();
 		NBTTagList list = nbtTag.getList("CanDestroy", 8);
 		if (list == null) {
 			return false;
 		}
 		try {
-			Field f = NBTTagList.class.getDeclaredField("list");
+			Field f = NBTTagList.class.getDeclaredField("c");
 			f.setAccessible(true);
 
-			for (NBTTagCompound nbt : (List<NBTTagCompound>) f.get(list)) {
-				return Material.matchMaterial(nbt.toString()) == block;
+			for (NBTTagString nbt : (List<NBTTagString>) f.get(list)) {
+
+				boolean b = getMaterialFromName(nbt.asString()) == material;
+				if (b) {
+					return true;
+				}
 			}
-		} catch (Exception ignored) {
+		} catch (Exception e1) {
 			return false;
 		}
 
 		return false;
+	}
+	@Override
+	public MaterialNameList getMaterialNameList() {
+		// I believe 1.16+ has all names mirror their Material type, if not tell me
+		return null;
+	}
+
+	@Override
+	public Material getMaterialFromName(String s) {
+		try {
+			int value = Integer.parseInt(s);
+			for (Material material: Material.values()) {
+				if (value == material.getId()) {
+					return material;
+				}
+			}
+			return null;
+		} catch (Exception ignored) {}
+
+		return Material.matchMaterial(s.replace("minecraft:", "").toLowerCase(Locale.ROOT));
 	}
 }
