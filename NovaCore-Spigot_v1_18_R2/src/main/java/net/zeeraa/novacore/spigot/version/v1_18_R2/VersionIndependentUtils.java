@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
@@ -651,6 +650,24 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		case WATCH:
 			return Material.CLOCK;
 			
+		case GOLD_HELMET:
+			return Material.GOLDEN_HELMET;
+			
+		case GOLD_CHESTPLATE:
+			return Material.GOLDEN_CHESTPLATE;
+			
+		case GOLD_LEGGINGS:
+			return Material.GOLDEN_LEGGINGS;
+			
+		case GOLD_BOOTS:
+			return Material.GOLDEN_BOOTS;
+			
+		case GRILLED_PORK:
+			return Material.COOKED_PORKCHOP;
+
+		case EXP_BOTTLE:
+			return Material.EXPERIENCE_BOTTLE;
+			
 		default:
 			setLastError(VersionIndependenceLayerError.MISSING_MATERIAL);
 			AbstractionLogger.getLogger().warning("VersionIndependentUtils", "Unknown version Independent material: " + material.name());
@@ -759,6 +776,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		entity.setSilent(silent);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public DeathType getDeathTypeFromDamage(EntityDamageEvent e, Entity lastDamager) {
 		switch (e.getCause()) {

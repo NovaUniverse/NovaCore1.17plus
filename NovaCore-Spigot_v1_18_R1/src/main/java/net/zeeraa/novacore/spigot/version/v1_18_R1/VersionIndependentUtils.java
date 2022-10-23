@@ -11,6 +11,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.zeeraa.novacore.commons.utils.LoopableIterator;
 import net.zeeraa.novacore.spigot.abstraction.*;
+
 import net.zeeraa.novacore.spigot.abstraction.enums.*;
 import net.zeeraa.novacore.spigot.abstraction.packet.PacketManager;
 import org.bukkit.*;
@@ -37,6 +38,8 @@ import com.mojang.authlib.properties.PropertyMap;
 import net.zeeraa.novacore.spigot.abstraction.log.AbstractionLogger;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17;
 import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
@@ -650,6 +653,24 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		case WATCH:
 			return Material.CLOCK;
 			
+		case GOLD_HELMET:
+			return Material.GOLDEN_HELMET;
+			
+		case GOLD_CHESTPLATE:
+			return Material.GOLDEN_CHESTPLATE;
+			
+		case GOLD_LEGGINGS:
+			return Material.GOLDEN_LEGGINGS;
+			
+		case GOLD_BOOTS:
+			return Material.GOLDEN_BOOTS;
+			
+		case GRILLED_PORK:
+			return Material.COOKED_PORKCHOP;
+
+		case EXP_BOTTLE:
+			return Material.EXPERIENCE_BOTTLE;
+			
 		default:
 			setLastError(VersionIndependenceLayerError.MISSING_MATERIAL);
 			AbstractionLogger.getLogger().warning("VersionIndependentUtils", "Unknown version Independent material: " + material.name());
@@ -758,6 +779,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		entity.setSilent(silent);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public DeathType getDeathTypeFromDamage(EntityDamageEvent e, Entity lastDamager) {
 		switch (e.getCause()) {
@@ -969,6 +991,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		return net.md_5.bungee.api.ChatColor.of(rgb).toString();
 	}
 
+
 	@Override
 	public PacketManager getPacketManager() {
 		if (packetManager == null) packetManager = new net.zeeraa.novacore.spigot.version.v1_18_R1.packet.PacketManager();
@@ -1000,7 +1023,6 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 
 		return false;
 	}
-
 	@Override
 	public MaterialNameList getMaterialNameList() {
 		// I believe 1.16+ has all names mirror their Material type, if not tell me
