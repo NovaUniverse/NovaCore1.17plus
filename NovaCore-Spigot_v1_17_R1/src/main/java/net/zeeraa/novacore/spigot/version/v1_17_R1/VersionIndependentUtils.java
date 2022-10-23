@@ -38,8 +38,6 @@ import com.mojang.authlib.properties.PropertyMap;
 import net.zeeraa.novacore.spigot.abstraction.log.AbstractionLogger;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17;
 
@@ -782,7 +780,6 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	@SuppressWarnings("deprecation")
 	@Override
 	public DeathType getDeathTypeFromDamage(EntityDamageEvent e, Entity lastDamager) {
-
 		switch (e.getCause()) {
 		case FIRE:
 			if (lastDamager != null)
@@ -859,63 +856,14 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		case ENTITY_SWEEP_ATTACK:
 			switch (lastDamager.getType()) {
 			case WITHER:
-				if (lastDamager != null)
-					return DeathType.EFFECT_WITHER_COMBAT;
-				return DeathType.EFFECT_WITHER;
-
-			case CONTACT:
-				if (e instanceof EntityDamageByBlockEvent) {
-					EntityDamageByBlockEvent blockEvent = (EntityDamageByBlockEvent) e;
-					if (lastDamager != null) {
-						if (blockEvent.getDamager().getType() == Material.SWEET_BERRY_BUSH)
-							return DeathType.BUSH_COMBAT;
-						else if (blockEvent.getDamager().getType() == Material.CACTUS)
-							return DeathType.CACTUS_COMBAT;
-						else if (blockEvent.getDamager().getType() == Material.POINTED_DRIPSTONE)
-							return DeathType.FALL_STALAGMITE_COMBAT;
-					} else {
-						if (blockEvent.getDamager().getType() == Material.SWEET_BERRY_BUSH)
-							return DeathType.BUSH;
-						else if (blockEvent.getDamager().getType() == Material.CACTUS)
-							return DeathType.CACTUS;
-						else if (blockEvent.getDamager().getType() == Material.POINTED_DRIPSTONE)
-							return DeathType.FALL_STALAGMITE;
-					}
-				}
-			case DROWNING:
-				if (lastDamager != null)
-					return DeathType.DROWN_COMBAT;
-				return DeathType.DROWN;
-
-			case LIGHTNING:
-				if (lastDamager != null)
-					return DeathType.LIGHTNING_COMBAT;
-				return DeathType.LIGHTNING;
-
-			case PROJECTILE:
-				if (lastDamager.getType() == EntityType.ARROW) {
-					return DeathType.PROJECTILE_ARROW;
-				}
-				return DeathType.PROJECTILE_OTHER;
-			case STARVATION:
-				if (lastDamager != null)
-					return DeathType.STARVING_COMBAT;
-				return DeathType.STARVING;
-
-			case SUFFOCATION:
-				if (lastDamager != null)
-					return DeathType.SUFFOCATION_COMBAT;
-				return DeathType.SUFFOCATION;
-			case ENTITY_ATTACK:
-			case ENTITY_SWEEP_ATTACK:
-				switch (lastDamager.getType()) {
-					case WITHER:
-						return DeathType.COMBAT_WITHER_SKULL;
-					case FIREBALL:
-					case SMALL_FIREBALL:
-						return DeathType.COMBAT_FIREBALL;
-					case BEE:
-						return DeathType.COMBAT_BEE;
+				return DeathType.COMBAT_WITHER_SKULL;
+			case FIREBALL:
+			case SMALL_FIREBALL:
+				return DeathType.COMBAT_FIREBALL;
+			case BEE:
+				return DeathType.COMBAT_BEE;
+			default:
+				return DeathType.COMBAT_NORMAL;
 			}
 		case FALLING_BLOCK:
 			if (e instanceof EntityDamageByEntityEvent) {
@@ -1041,7 +989,8 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 
 	@Override
 	public PacketManager getPacketManager() {
-		if (packetManager == null) packetManager = new net.zeeraa.novacore.spigot.version.v1_17_R1.packet.PacketManager();
+		if (packetManager == null)
+			packetManager = new net.zeeraa.novacore.spigot.version.v1_17_R1.packet.PacketManager();
 		return packetManager;
 	}
 
@@ -1071,23 +1020,26 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 
 		return false;
 	}
+
 	@Override
 	public MaterialNameList getMaterialNameList() {
 		// I believe 1.16+ has all names mirror their Material type, if not tell me
 		return null;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public Material getMaterialFromName(String s) {
 		try {
 			int value = Integer.parseInt(s);
-			for (Material material: Material.values()) {
+			for (Material material : Material.values()) {
 				if (value == material.getId()) {
 					return material;
 				}
 			}
 			return null;
-		} catch (Exception ignored) {}
+		} catch (Exception ignored) {
+		}
 
 		return Material.matchMaterial(s.replace("minecraft:", "").toLowerCase(Locale.ROOT));
 	}

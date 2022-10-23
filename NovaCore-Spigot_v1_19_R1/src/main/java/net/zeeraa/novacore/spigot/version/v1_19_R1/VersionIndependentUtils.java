@@ -854,63 +854,14 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		case ENTITY_SWEEP_ATTACK:
 			switch (lastDamager.getType()) {
 			case WITHER:
-				if (lastDamager != null)
-					return DeathType.EFFECT_WITHER_COMBAT;
-				return DeathType.EFFECT_WITHER;
-
-			case CONTACT:
-				if (e instanceof EntityDamageByBlockEvent) {
-					EntityDamageByBlockEvent blockEvent = (EntityDamageByBlockEvent) e;
-					if (lastDamager != null) {
-						if (blockEvent.getDamager().getType() == Material.SWEET_BERRY_BUSH)
-							return DeathType.BUSH_COMBAT;
-						else if (blockEvent.getDamager().getType() == Material.CACTUS)
-							return DeathType.CACTUS_COMBAT;
-						else if (blockEvent.getDamager().getType() == Material.POINTED_DRIPSTONE)
-							return DeathType.FALL_STALAGMITE_COMBAT;
-					} else {
-						if (blockEvent.getDamager().getType() == Material.SWEET_BERRY_BUSH)
-							return DeathType.BUSH;
-						else if (blockEvent.getDamager().getType() == Material.CACTUS)
-							return DeathType.CACTUS;
-						else if (blockEvent.getDamager().getType() == Material.POINTED_DRIPSTONE)
-							return DeathType.FALL_STALAGMITE;
-					}
-				}
-			case DROWNING:
-				if (lastDamager != null)
-					return DeathType.DROWN_COMBAT;
-				return DeathType.DROWN;
-
-			case LIGHTNING:
-				if (lastDamager != null)
-					return DeathType.LIGHTNING_COMBAT;
-				return DeathType.LIGHTNING;
-
-			case PROJECTILE:
-				if (lastDamager.getType() == EntityType.ARROW) {
-					return DeathType.PROJECTILE_ARROW;
-				}
-				return DeathType.PROJECTILE_OTHER;
-			case STARVATION:
-				if (lastDamager != null)
-					return DeathType.STARVING_COMBAT;
-				return DeathType.STARVING;
-
-			case SUFFOCATION:
-				if (lastDamager != null)
-					return DeathType.SUFFOCATION_COMBAT;
-				return DeathType.SUFFOCATION;
-			case ENTITY_ATTACK:
-			case ENTITY_SWEEP_ATTACK:
-				switch (lastDamager.getType()) {
-					case WITHER:
-						return DeathType.COMBAT_WITHER_SKULL;
-					case FIREBALL:
-					case SMALL_FIREBALL:
-						return DeathType.COMBAT_FIREBALL;
-					case BEE:
-						return DeathType.COMBAT_BEE;
+				return DeathType.COMBAT_WITHER_SKULL;
+			case FIREBALL:
+			case SMALL_FIREBALL:
+				return DeathType.COMBAT_FIREBALL;
+			case BEE:
+				return DeathType.COMBAT_BEE;
+			default:
+				return DeathType.COMBAT_NORMAL;
 			}
 		case FALLING_BLOCK:
 			if (e instanceof EntityDamageByEntityEvent) {
@@ -984,8 +935,6 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 			if (lastDamager != null)
 				return DeathType.FROZEN_COMBAT;
 			return DeathType.FROZEN;
-		case SONIC_BOOM:
-			return DeathType.SONIC_BOOM;
 		case SUICIDE:
 		case DRYOUT:
 		case CUSTOM:
@@ -1038,10 +987,12 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 
 	@Override
 	public PacketManager getPacketManager() {
-		if (packetManager == null) packetManager = new net.zeeraa.novacore.spigot.version.v1_19_R1.packet.PacketManager();
+		if (packetManager == null)
+			packetManager = new net.zeeraa.novacore.spigot.version.v1_19_R1.packet.PacketManager();
 		return packetManager;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean canBreakBlock(ItemStack itemStack, Material material) {
 		net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(itemStack);
