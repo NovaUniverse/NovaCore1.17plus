@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import net.md_5.bungee.api.ChatColor;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
@@ -40,6 +41,8 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.server.MinecraftServer;
 import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17;
+
+import java.awt.Color;
 
 public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstraction.VersionIndependentUtils {
 	private ItemBuilderRecordList itemBuilderRecordList;
@@ -949,16 +952,15 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 
 	@Override
 	public String colorize(Color color, String message) {
-		String thing = "&x" + asChatColor(color.getRed() + "" + color.getGreen() + "" + color.getBlue()) + message;
-
-		return org.bukkit.ChatColor.translateAlternateColorCodes('&', thing);
+		return net.md_5.bungee.api.ChatColor.of(color).toString() + message;
 	}
 
 	@Override
 	public String colorizeGradient(Color[] colors, String message) {
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < message.length(); i++) {
-			builder.append(asChatColor(colors[i].getRed() + "" + colors[i].getGreen() + "" + colors[i].getBlue())).append(message.toCharArray()[i]);
+			builder.append(ChatColor.of(new Color(colors[i].getRed(), colors[i].getGreen(), colors[i].getBlue())))
+					.append(message.toCharArray()[i]);
 		}
 		return builder.toString();
 	}
@@ -980,10 +982,6 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		return finalBuild.toString();
 	}
 
-	@Override
-	public String asChatColor(String rgb) {
-		return net.md_5.bungee.api.ChatColor.of(rgb).toString();
-	}
 
 	@Override
 	public PacketManager getPacketManager() {
