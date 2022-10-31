@@ -10,13 +10,17 @@ import net.md_5.bungee.api.ChatColor;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraft.network.protocol.Packet;
+import net.zeeraa.novacore.commons.log.Log;
 import net.zeeraa.novacore.commons.utils.LoopableIterator;
 import net.zeeraa.novacore.spigot.abstraction.*;
 
+import net.zeeraa.novacore.spigot.abstraction.commons.AttributeInfo;
 import net.zeeraa.novacore.spigot.abstraction.enums.*;
 import net.zeeraa.novacore.spigot.abstraction.packet.PacketManager;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
 import org.bukkit.entity.*;
@@ -1039,5 +1043,36 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		}
 
 		return Material.matchMaterial(s.replace("minecraft:", "").toLowerCase(Locale.ROOT));
+	}
+
+	@Override
+	public void sendPacket(Player player, Object packet) {
+		if (packet instanceof Packet) {
+			((CraftPlayer) player).getHandle().b.a((Packet<?>) packet);
+		} else {
+			Log.warn("NovaCore", "Packet sent isnt instance of " + Packet.class.getCanonicalName());
+		}
+	}
+	@Override
+	public ItemStack addAttribute(ItemStack item, AttributeInfo attributeInfo) {
+		if (attributeInfo.getEquipmentSlots().contains(net.zeeraa.novacore.spigot.abstraction.enums.EquipmentSlot.ALL)) {
+			AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), attributeInfo.getAttribute().getKey(),
+					attributeInfo.getValue(), AttributeModifier.Operation.valueOf(attributeInfo.getOperation().name()));
+
+			ItemMeta meta = item.getItemMeta();
+			meta.addAttributeModifier(Attribute.valueOf(attributeInfo.getAttribute().name()), modifier);
+			item.setItemMeta(meta);
+		} else {
+			for (net.zeeraa.novacore.spigot.abstraction.enums.EquipmentSlot eSlot : attributeInfo.getEquipmentSlots()) {
+				AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), attributeInfo.getAttribute().getKey(),
+						attributeInfo.getValue(), AttributeModifier.Operation.valueOf(attributeInfo.getOperation().name()), EquipmentSlot.valueOf(eSlot.name()));
+
+				ItemMeta meta = item.getItemMeta();
+				meta.addAttributeModifier(Attribute.valueOf(attributeInfo.getAttribute().name()), modifier);
+				item.setItemMeta(meta);
+			}
+		}
+
+		return item;
 	}
 }
