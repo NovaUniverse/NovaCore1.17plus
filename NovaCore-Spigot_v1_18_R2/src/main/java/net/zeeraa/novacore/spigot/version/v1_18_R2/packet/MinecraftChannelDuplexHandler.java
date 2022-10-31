@@ -37,7 +37,6 @@ public class MinecraftChannelDuplexHandler extends net.zeeraa.novacore.spigot.ab
         List<Event> events = new ArrayList<>();
         if (packet.getClass().equals(PacketPlayInSettings.class)) {
             PacketPlayInSettings settings = (PacketPlayInSettings) packet;
-
             events.add(new PlayerSettingsEvent(player, settings.b, settings.c, ChatVisibility.fromNMS(settings.d().name()), settings.e(), settings.f(), MainHand.valueOfNMS(settings.g().name()), settings.h(), settings.i()));
 
         } else if (packet.getClass().equals(PacketPlayInArmAnimation.class)) {
