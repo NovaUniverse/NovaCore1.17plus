@@ -12,6 +12,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.protocol.Packet;
 import net.zeeraa.novacore.commons.log.Log;
+import net.zeeraa.novacore.commons.utils.ListUtils;
 import net.zeeraa.novacore.commons.utils.LoopableIterator;
 import net.zeeraa.novacore.spigot.abstraction.*;
 
@@ -1055,25 +1056,35 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		}
 	}
 	@Override
-	public ItemStack addAttribute(ItemStack item, AttributeInfo attributeInfo) {
-		if (attributeInfo.getEquipmentSlots().contains(net.zeeraa.novacore.spigot.abstraction.enums.EquipmentSlot.ALL)) {
+	public void addAttribute(ItemStack item, ItemMeta meta, AttributeInfo attributeInfo) {
+		if (attributeInfo == null) {
+			Log.error("VersionIndependentUtils", "AttributeInfo is null");
+			return;
+		}
+
+		if (attributeInfo.getAttribute() == null) {
+			Log.error("VersionIndependentUtils", "Attribute is null");
+			return;
+		}
+
+		List<net.zeeraa.novacore.spigot.abstraction.enums.EquipmentSlot> newList = ListUtils.removeDuplicates(attributeInfo.getEquipmentSlots());
+
+		if (newList.contains(net.zeeraa.novacore.spigot.abstraction.enums.EquipmentSlot.ALL)) {
 			AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), attributeInfo.getAttribute().getKey(),
 					attributeInfo.getValue(), AttributeModifier.Operation.valueOf(attributeInfo.getOperation().name()));
 
-			ItemMeta meta = item.getItemMeta();
-			meta.addAttributeModifier(Attribute.valueOf(attributeInfo.getAttribute().name()), modifier);
-			item.setItemMeta(meta);
+			if (!meta.addAttributeModifier(Attribute.valueOf(attributeInfo.getAttribute().name()), modifier)) {
+				Log.error("VersionIndependentUtils", "Something went wrong when adding the attribute " + attributeInfo.getAttribute().getKey());
+			}
+
 		} else {
-			for (net.zeeraa.novacore.spigot.abstraction.enums.EquipmentSlot eSlot : attributeInfo.getEquipmentSlots()) {
+			for (net.zeeraa.novacore.spigot.abstraction.enums.EquipmentSlot eSlot : newList) {
 				AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), attributeInfo.getAttribute().getKey(),
 						attributeInfo.getValue(), AttributeModifier.Operation.valueOf(attributeInfo.getOperation().name()), EquipmentSlot.valueOf(eSlot.name()));
-
-				ItemMeta meta = item.getItemMeta();
-				meta.addAttributeModifier(Attribute.valueOf(attributeInfo.getAttribute().name()), modifier);
-				item.setItemMeta(meta);
+				if (!meta.addAttributeModifier(Attribute.valueOf(attributeInfo.getAttribute().name()), modifier)) {
+					Log.error("VersionIndependentUtils", "Something went wrong when adding the attribute " + attributeInfo.getAttribute().getKey());
+				}
 			}
 		}
-
-		return item;
 	}
 }
