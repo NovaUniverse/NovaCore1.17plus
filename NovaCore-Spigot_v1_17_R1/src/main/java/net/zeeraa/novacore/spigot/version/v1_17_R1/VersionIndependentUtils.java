@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.world.entity.item.EntityFallingBlock;
 import net.zeeraa.novacore.commons.log.Log;
 import net.zeeraa.novacore.commons.utils.ListUtils;
 import net.zeeraa.novacore.commons.utils.LoopableIterator;
@@ -20,8 +21,12 @@ import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftFallingBlock;
 import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_17_R1.util.CraftMagicNumbers;
 import org.bukkit.entity.*;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -47,6 +52,7 @@ import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 
 import java.awt.Color;
+import java.util.function.Consumer;
 
 public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstraction.VersionIndependentUtils {
 	private ItemBuilderRecordList itemBuilderRecordList;
@@ -1100,5 +1106,17 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		ignore.add(Material.LAVA);
 		ignore.add(Material.WATER);
 		return getTargetBlockExact(entity, 5, ignore);
+	}
+	@Override
+	public FallingBlock spawnFallingBlock(Location location, Material material, Consumer<FallingBlock> consumer) {
+		EntityFallingBlock fb = new EntityFallingBlock(((CraftWorld)location.getWorld()).getHandle(), location.getX(), location.getY(), location.getZ(), CraftMagicNumbers.getBlock(material).getBlockData());
+		if (fb.getBukkitEntity() instanceof CraftFallingBlock) {
+			CraftFallingBlock cfb = (CraftFallingBlock) fb.getBukkitEntity();
+			consumer.accept(cfb);
+			((CraftWorld) location.getWorld()).getHandle().addEntity(fb, CreatureSpawnEvent.SpawnReason.CUSTOM);
+			return cfb;
+		} else {
+			throw new IllegalStateException("[VersionIndependentUtils] An unexpected error occurred");
+		}
 	}
 }
