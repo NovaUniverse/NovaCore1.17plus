@@ -30,10 +30,6 @@ public class MinecraftChannelDuplexHandler extends net.zeeraa.novacore.spigot.ab
 
     public boolean readPacket(Player player, Object packet) throws NoSuchFieldException, IllegalAccessException {
         List<Player> playersDigging = VersionIndependentUtils.get().getPacketManager().getPlayersDigging();
-        Set<Material> transparent = new HashSet<>();
-        transparent.add(Material.AIR);
-        transparent.add(Material.WATER);
-        transparent.add(Material.LAVA);
         List<Event> events = new ArrayList<>();
         if (packet.getClass().equals(PacketPlayInSettings.class)) {
             PacketPlayInSettings settings = (PacketPlayInSettings) packet;
@@ -44,8 +40,8 @@ public class MinecraftChannelDuplexHandler extends net.zeeraa.novacore.spigot.ab
 
             events.add(new PlayerSwingEvent(player, System.currentTimeMillis(), Hand.valueOf(arm.b().name())));
 
-            if (canBreak(player, player.getTargetBlock(transparent, 5))) {
-                events.add(new PlayerAttemptBreakBlockEvent(player, System.currentTimeMillis(), player.getTargetBlock(transparent, 5)));
+            if (canBreak(player, VersionIndependentUtils.get().getReacheableBlockExact(player))) {
+                events.add(new PlayerAttemptBreakBlockEvent(player, System.currentTimeMillis(), VersionIndependentUtils.get().getReacheableBlockExact(player)));
             }
         } else if (packet.getClass().equals(PacketPlayInSpectate.class)) {
             PacketPlayInSpectate spectate = (PacketPlayInSpectate) packet;
@@ -61,8 +57,8 @@ public class MinecraftChannelDuplexHandler extends net.zeeraa.novacore.spigot.ab
                 case a:
                     if (playersDigging.stream().noneMatch(pl -> pl.getUniqueId().equals(player.getUniqueId()))) {
                         playersDigging.add(player);
-                        if (canBreak(player, player.getTargetBlock(transparent, 5))) {
-                            events.add(new PlayerAttemptBreakBlockEvent(player, System.currentTimeMillis(), player.getTargetBlock(transparent, 5)));
+                        if (canBreak(player, VersionIndependentUtils.get().getReacheableBlockExact(player))) {
+                            events.add(new PlayerAttemptBreakBlockEvent(player, System.currentTimeMillis(), VersionIndependentUtils.get().getReacheableBlockExact(player)));
                         }
                     }
                     break;
