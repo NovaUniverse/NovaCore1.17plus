@@ -1,10 +1,7 @@
 package net.zeeraa.novacore.spigot.version.v1_18_R1;
 
 import java.lang.reflect.Field;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
+import java.util.*;
 
 import net.md_5.bungee.api.ChatColor;
 import net.minecraft.nbt.NBTTagCompound;
@@ -1085,5 +1082,22 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 				}
 			}
 		}
+	}
+	@Override
+	public Block getTargetBlockExact(LivingEntity entity, int distance, List<Material> ignore) {
+		if (ignore.contains(Material.AIR) || ignore.contains(Material.WATER) || ignore.contains(Material.LAVA)) {
+			return entity.getWorld().rayTraceBlocks(entity.getEyeLocation(), entity.getEyeLocation().getDirection(), distance, FluidCollisionMode.ALWAYS, true).getHitBlock();
+		} else {
+			return entity.getWorld().rayTraceBlocks(entity.getEyeLocation(), entity.getEyeLocation().getDirection(), distance, FluidCollisionMode.NEVER, false).getHitBlock();
+
+		}
+	}
+
+	@Override
+	public Block getReacheableBlockExact(LivingEntity entity) {
+		List<Material> ignore = new ArrayList<>();
+		ignore.add(Material.LAVA);
+		ignore.add(Material.WATER);
+		return getTargetBlockExact(entity, 5, ignore);
 	}
 }
