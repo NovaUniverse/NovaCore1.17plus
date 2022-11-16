@@ -5,6 +5,7 @@ import java.util.*;
 
 import net.md_5.bungee.api.ChatColor;
 import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.core.BlockPosition;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
@@ -55,6 +56,7 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.server.MinecraftServer;
 import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17;
+import org.bukkit.util.RayTraceResult;
 
 import java.awt.Color;
 import java.util.function.Consumer;
@@ -1097,11 +1099,16 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	}
 	@Override
 	public Block getTargetBlockExact(LivingEntity entity, int distance, List<Material> ignore) {
+		RayTraceResult returned;
 		if (ignore.contains(Material.AIR) || ignore.contains(Material.WATER) || ignore.contains(Material.LAVA)) {
-			return entity.getWorld().rayTraceBlocks(entity.getEyeLocation(), entity.getEyeLocation().getDirection(), distance, FluidCollisionMode.ALWAYS, true).getHitBlock();
+			returned = entity.getWorld().rayTraceBlocks(entity.getEyeLocation(), entity.getEyeLocation().getDirection(), distance, FluidCollisionMode.ALWAYS, true);
 		} else {
-			return entity.getWorld().rayTraceBlocks(entity.getEyeLocation(), entity.getEyeLocation().getDirection(), distance, FluidCollisionMode.NEVER, false).getHitBlock();
-
+			returned = entity.getWorld().rayTraceBlocks(entity.getEyeLocation(), entity.getEyeLocation().getDirection(), distance, FluidCollisionMode.NEVER, false);
+		}
+		if (returned == null) {
+			return null;
+		} else {
+			return returned.getHitBlock();
 		}
 	}
 
@@ -1113,9 +1120,9 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		return getTargetBlockExact(entity, 5, ignore);
 	}
 	@Override
-	public FallingBlock spawnFallingBlock(Location location, Material material, Consumer<FallingBlock> consumer) {
+	public FallingBlock spawnFallingBlock(Location location, Material material, byte data, Consumer<FallingBlock> consumer) {
 		try {
-			EntityFallingBlock fb = EntityFallingBlock.class.getDeclaredConstructor(net.minecraft.world.level.World.class, double.class, double.class, double.class, IBlockData.class).newInstance(((CraftWorld)location.getWorld()).getHandle(), location.getX(), location.getY(), location.getZ(), CraftMagicNumbers.getBlock(material).m());
+			EntityFallingBlock fb = EntityFallingBlock.fall(((CraftWorld)location.getWorld()).getHandle(), new BlockPosition(location.getX(), location.getY(), location.getZ()), CraftMagicNumbers.getBlock(material).m(), CreatureSpawnEvent.SpawnReason.CUSTOM);
 			if (fb.getBukkitEntity() instanceof CraftFallingBlock) {
 				CraftFallingBlock cfb = (CraftFallingBlock) fb.getBukkitEntity();
 				consumer.accept(cfb);
