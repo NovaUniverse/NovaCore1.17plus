@@ -50,6 +50,7 @@ import net.minecraft.server.MinecraftServer;
 import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17;
 
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
+import org.bukkit.util.RayTraceResult;
 
 import java.awt.Color;
 import java.util.function.Consumer;
@@ -1092,11 +1093,16 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	}
 	@Override
 	public Block getTargetBlockExact(LivingEntity entity, int distance, List<Material> ignore) {
+		RayTraceResult returned;
 		if (ignore.contains(Material.AIR) || ignore.contains(Material.WATER) || ignore.contains(Material.LAVA)) {
-			return entity.getWorld().rayTraceBlocks(entity.getEyeLocation(), entity.getEyeLocation().getDirection(), distance, FluidCollisionMode.ALWAYS, true).getHitBlock();
+			returned = entity.getWorld().rayTraceBlocks(entity.getEyeLocation(), entity.getEyeLocation().getDirection(), distance, FluidCollisionMode.ALWAYS, true);
 		} else {
-			return entity.getWorld().rayTraceBlocks(entity.getEyeLocation(), entity.getEyeLocation().getDirection(), distance, FluidCollisionMode.NEVER, false).getHitBlock();
-
+			returned = entity.getWorld().rayTraceBlocks(entity.getEyeLocation(), entity.getEyeLocation().getDirection(), distance, FluidCollisionMode.NEVER, false);
+		}
+		if (returned == null) {
+			return null;
+		} else {
+			return returned.getHitBlock();
 		}
 	}
 
@@ -1108,8 +1114,9 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		return getTargetBlockExact(entity, 5, ignore);
 	}
 	@Override
-	public FallingBlock spawnFallingBlock(Location location, Material material, Consumer<FallingBlock> consumer) {
+	public FallingBlock spawnFallingBlock(Location location, Material material, byte data, Consumer<FallingBlock> consumer) {
 		EntityFallingBlock fb = new EntityFallingBlock(((CraftWorld)location.getWorld()).getHandle(), location.getX(), location.getY(), location.getZ(), CraftMagicNumbers.getBlock(material).getBlockData());
+		fb.b = 1;
 		if (fb.getBukkitEntity() instanceof CraftFallingBlock) {
 			CraftFallingBlock cfb = (CraftFallingBlock) fb.getBukkitEntity();
 			consumer.accept(cfb);

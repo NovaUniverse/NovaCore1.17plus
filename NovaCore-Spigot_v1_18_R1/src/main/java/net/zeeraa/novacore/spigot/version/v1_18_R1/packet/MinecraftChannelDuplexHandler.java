@@ -15,6 +15,7 @@ import net.zeeraa.novacore.spigot.abstraction.packet.event.PlayerSwingEvent;
 import net.zeeraa.novacore.spigot.abstraction.packet.event.SpectatorTeleportEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -59,8 +60,11 @@ public class MinecraftChannelDuplexHandler extends net.zeeraa.novacore.spigot.ab
 			case a:
 				if (playersDigging.stream().noneMatch(pl -> pl.getUniqueId().equals(player.getUniqueId()))) {
 					playersDigging.add(player);
-					if (canBreak(player, VersionIndependentUtils.get().getReacheableBlockExact(player))) {
-						events.add(new PlayerAttemptBreakBlockEvent(player, System.currentTimeMillis(), VersionIndependentUtils.get().getReacheableBlockExact(player)));
+					Block block = VersionIndependentUtils.get().getReacheableBlockExact(player);
+					if (block != null) {
+						if (canBreak(player, block)) {
+							events.add(new PlayerAttemptBreakBlockEvent(player, System.currentTimeMillis(), block));
+						}
 					}
 				}
 				break;
