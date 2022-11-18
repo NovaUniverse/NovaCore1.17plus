@@ -4,19 +4,12 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 import net.md_5.bungee.api.ChatColor;
-import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
-import net.minecraft.network.PacketListener;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.PacketListenerPlayIn;
-import net.minecraft.network.protocol.game.PacketListenerPlayOut;
-import net.minecraft.network.protocol.game.PacketPlayOutBlockBreakAnimation;
-import net.minecraft.server.network.PlayerConnection;
 import net.minecraft.world.entity.item.EntityFallingBlock;
-import net.minecraft.world.level.block.state.IBlockData;
 import net.zeeraa.novacore.commons.log.Log;
 import net.zeeraa.novacore.commons.utils.ListUtils;
 import net.zeeraa.novacore.commons.utils.LoopableIterator;
@@ -1042,6 +1035,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		return null;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public Material getMaterialFromName(String s) {
 		try {

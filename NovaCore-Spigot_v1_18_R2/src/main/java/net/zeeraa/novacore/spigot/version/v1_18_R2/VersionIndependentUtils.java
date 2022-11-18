@@ -10,7 +10,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.world.entity.item.EntityFallingBlock;
-import net.minecraft.world.level.block.state.IBlockData;
 import net.zeeraa.novacore.commons.log.Log;
 import net.zeeraa.novacore.commons.utils.ListUtils;
 import net.zeeraa.novacore.commons.utils.LoopableIterator;
@@ -1002,6 +1001,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		return packetManager;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean canBreakBlock(ItemStack itemStack, Material material) {
 		net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(itemStack);
@@ -1034,6 +1034,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		return null;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public Material getMaterialFromName(String s) {
 		try {

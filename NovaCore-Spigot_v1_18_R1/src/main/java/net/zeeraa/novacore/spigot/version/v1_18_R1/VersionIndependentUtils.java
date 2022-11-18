@@ -47,8 +47,6 @@ import com.mojang.authlib.properties.PropertyMap;
 import net.zeeraa.novacore.spigot.abstraction.log.AbstractionLogger;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17;
 import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
@@ -1005,6 +1003,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		return packetManager;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean canBreakBlock(ItemStack itemStack, Material material) {
 		net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(itemStack);
@@ -1036,6 +1035,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		return null;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public Material getMaterialFromName(String s) {
 		try {
