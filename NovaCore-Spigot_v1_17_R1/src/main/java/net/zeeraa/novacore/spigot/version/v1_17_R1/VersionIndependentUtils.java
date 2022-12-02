@@ -30,6 +30,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -1145,5 +1146,10 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 			PotionMeta potMeta = (PotionMeta) meta;
 			potMeta.setColor(color);
 		}
+	}
+
+	@Override
+	public Block getBlockFromProjectileHitEvent(ProjectileHitEvent e) {
+		return e.getHitBlock();
 	}
 }
