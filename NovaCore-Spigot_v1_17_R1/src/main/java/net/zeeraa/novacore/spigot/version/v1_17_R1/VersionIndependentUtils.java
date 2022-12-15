@@ -691,16 +691,6 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		}
 	}
 
-	private LabyModProtocolImpl lmp = null;
-
-	@Override
-	public LabyModProtocol getLabyModProtocol() {
-		if (lmp == null) {
-			lmp = new LabyModProtocolImpl();
-		}
-		return lmp;
-	}
-
 	@Override
 	public NovaCoreGameVersion getNovaCoreGameVersion() {
 		return NovaCoreGameVersion.V_1_17;
