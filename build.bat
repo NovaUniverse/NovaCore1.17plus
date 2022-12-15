@@ -1,4 +1,4 @@
-call mvn package
+call mvn clean package
 
 if exist %cd%\NovaCore-1_17-Plus.jar del %cd%\NovaCore-1_17-Plus.jar
 
