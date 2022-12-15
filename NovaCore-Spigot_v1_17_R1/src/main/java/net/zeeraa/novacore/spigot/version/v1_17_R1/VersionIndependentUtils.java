@@ -16,6 +16,7 @@ import net.zeeraa.novacore.spigot.abstraction.*;
 
 import net.zeeraa.novacore.spigot.abstraction.commons.AttributeInfo;
 import net.zeeraa.novacore.spigot.abstraction.enums.*;
+import net.zeeraa.novacore.spigot.abstraction.enums.EquipmentSlot;
 import net.zeeraa.novacore.spigot.abstraction.packet.PacketManager;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -32,10 +33,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.*;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -52,6 +51,7 @@ import net.minecraft.server.MinecraftServer;
 import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17;
 
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.RayTraceResult;
 
@@ -1141,5 +1141,15 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	@Override
 	public Block getBlockFromProjectileHitEvent(ProjectileHitEvent e) {
 		return e.getHitBlock();
+	}
+
+	@Override
+	public ShapedRecipe createShapedRecipeSafe(ItemStack result, Plugin owner, String key) {
+		return new ShapedRecipe(new NamespacedKey(owner, key.toLowerCase()), result);
+	}
+
+	@Override
+	public ShapelessRecipe createShapelessRecipe(ItemStack result, Plugin owner, String key) {
+		return new ShapelessRecipe(new NamespacedKey(owner, key.toLowerCase()), result);
 	}
 }
