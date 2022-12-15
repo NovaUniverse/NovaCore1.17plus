@@ -687,7 +687,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 
 	@Override
 	public NovaCoreGameVersion getNovaCoreGameVersion() {
-		return NovaCoreGameVersion.V_1_19_R1;
+		return NovaCoreGameVersion.V_1_19_R2;
 	}
 
 	@Override

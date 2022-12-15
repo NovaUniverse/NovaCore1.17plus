@@ -20,5 +20,6 @@
     <orderEntry type="module" module-name="novacore-spigot_v1_18_R1" />
     <orderEntry type="module" module-name="novacore-spigot_v1_18_R2" />
     <orderEntry type="module" module-name="novacore-spigot_v1_19_R1" />
+    <orderEntry type="module" module-name="novacore-spigot_v1_19_R2" />
   </component>
 </module>
