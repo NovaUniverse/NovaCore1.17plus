@@ -34,7 +34,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.*;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -754,7 +753,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 
 	@Override
 	public boolean isInteractEventMainHand(PlayerInteractEvent e) {
-		return e.getHand() == EquipmentSlot.HAND;
+		return e.getHand() == org.bukkit.inventory.EquipmentSlot.HAND;
 	}
 
 	@Override
@@ -1077,7 +1076,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		} else {
 			for (net.zeeraa.novacore.spigot.abstraction.enums.EquipmentSlot eSlot : newList) {
 				AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), attributeInfo.getAttribute().getKey(),
-						attributeInfo.getValue(), AttributeModifier.Operation.valueOf(attributeInfo.getOperation().name()), EquipmentSlot.valueOf(eSlot.name()));
+						attributeInfo.getValue(), AttributeModifier.Operation.valueOf(attributeInfo.getOperation().name()), org.bukkit.inventory.EquipmentSlot.valueOf(eSlot.name()));
 				if (!meta.addAttributeModifier(Attribute.valueOf(attributeInfo.getAttribute().name()), modifier)) {
 					Log.error("VersionIndependentUtils", "Something went wrong when adding the attribute " + attributeInfo.getAttribute().getKey());
 				}
