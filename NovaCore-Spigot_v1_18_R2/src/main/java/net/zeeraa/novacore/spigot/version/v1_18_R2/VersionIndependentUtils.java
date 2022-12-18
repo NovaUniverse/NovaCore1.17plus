@@ -1,15 +1,22 @@
 package net.zeeraa.novacore.spigot.version.v1_18_R2;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.*;
 
 import net.md_5.bungee.api.ChatColor;
 import net.minecraft.core.BlockPosition;
+import net.minecraft.core.SectionPosition;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntity;
+import net.minecraft.server.level.EntityPlayer;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.item.EntityFallingBlock;
+import net.minecraft.world.level.entity.*;
+import net.minecraft.world.scores.ScoreboardObjective;
 import net.zeeraa.novacore.commons.log.Log;
 import net.zeeraa.novacore.commons.utils.ListUtils;
 import net.zeeraa.novacore.commons.utils.LoopableIterator;
@@ -23,6 +30,7 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_18_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_18_R2.entity.CraftFallingBlock;
+import org.bukkit.craftbukkit.v1_18_R2.entity.CraftLightningStrike;
 import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_18_R2.util.CraftMagicNumbers;
 import org.bukkit.entity.*;
@@ -53,10 +61,12 @@ import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17;
 import org.bukkit.craftbukkit.v1_18_R2.entity.CraftPlayer;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.RayTraceResult;
 
 import java.awt.Color;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstraction.VersionIndependentUtils {
 	private ItemBuilderRecordList itemBuilderRecordList;

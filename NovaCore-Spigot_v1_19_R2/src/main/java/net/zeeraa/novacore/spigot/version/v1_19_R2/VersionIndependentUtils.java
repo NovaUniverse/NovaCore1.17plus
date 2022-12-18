@@ -15,12 +15,13 @@ import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_19_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_19_R2.entity.CraftFallingBlock;
 import org.bukkit.craftbukkit.v1_19_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_19_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_19_R2.util.CraftMagicNumbers;
 import org.bukkit.entity.*;
-import org.bukkit.event.entity.EntityDamageByBlockEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -992,7 +993,6 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean canBreakBlock(ItemStack itemStack, Material material) {
-		/*
 		net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(itemStack);
 		NBTTagCompound nbtTag = nmsItem.v();
 		NBTTagList list = nbtTag.c("CanDestroy", 8);
@@ -1004,7 +1004,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 			f.setAccessible(true);
 
 			for (NBTTagString nbt : (List<NBTTagString>) f.get(list)) {
-				boolean b = getMaterialFromName(nbt.e_()) == material;
+				boolean b = getMaterialFromName(nbt.f_()) == material;
 
 				if (b) {
 					return true;
@@ -1015,10 +1015,8 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		}
 
 		return false;
-		*/
-		AbstractionLogger.getLogger().warning("Attempted to call unimplemented function VersionIndependentUtils#canBreakBlock()");
-		return false;
-		//TODO: update to 1.19.3
+
+
 	}
 
 	@Override
@@ -1109,9 +1107,8 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	}
 	@Override
 	public FallingBlock spawnFallingBlock(Location location, Material material, byte data, Consumer<FallingBlock> consumer) {
-		/*
 		try {
-			EntityFallingBlock fb = EntityFallingBlock.fall(((CraftWorld)location.getWorld()).getHandle(), new BlockPosition(location.getX(), location.getY(), location.getZ()), CraftMagicNumbers.getBlock(material).m(), CreatureSpawnEvent.SpawnReason.CUSTOM);
+			EntityFallingBlock fb = EntityFallingBlock.fall(((CraftWorld)location.getWorld()).getHandle(), new BlockPosition(location.getX(), location.getY(), location.getZ()), CraftMagicNumbers.getBlock(material).n(), CreatureSpawnEvent.SpawnReason.CUSTOM);
 			if (fb.getBukkitEntity() instanceof CraftFallingBlock) {
 				CraftFallingBlock cfb = (CraftFallingBlock) fb.getBukkitEntity();
 				consumer.accept(cfb);
@@ -1124,10 +1121,6 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 			e.printStackTrace();
 		}
 		throw new IllegalStateException("[VersionIndependentUtils] An unexpected error occurred");
-		*/
-		AbstractionLogger.getLogger().warning("Attempted to call unimplemented function VersionIndependentUtils#spawnFallingBlock()");
-		return null;
-		//TODO: update to 1.19.3
 	}
 	@Override
 	public void setPotionEffect(ItemStack item, ItemMeta meta, PotionEffect effect, boolean color) {

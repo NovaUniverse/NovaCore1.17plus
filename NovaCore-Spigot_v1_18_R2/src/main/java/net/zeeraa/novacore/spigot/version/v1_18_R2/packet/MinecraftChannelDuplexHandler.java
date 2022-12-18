@@ -1,9 +1,6 @@
 package net.zeeraa.novacore.spigot.version.v1_18_R2.packet;
 
-import net.minecraft.network.protocol.game.PacketPlayInArmAnimation;
-import net.minecraft.network.protocol.game.PacketPlayInBlockDig;
-import net.minecraft.network.protocol.game.PacketPlayInSettings;
-import net.minecraft.network.protocol.game.PacketPlayInSpectate;
+import net.minecraft.network.protocol.game.*;
 import net.minecraft.world.entity.player.EnumChatVisibility;
 import net.zeeraa.novacore.spigot.abstraction.VersionIndependentUtils;
 import net.zeeraa.novacore.spigot.abstraction.enums.ChatVisibility;
@@ -15,6 +12,7 @@ import net.zeeraa.novacore.spigot.abstraction.packet.event.PlayerSwingEvent;
 import net.zeeraa.novacore.spigot.abstraction.packet.event.SpectatorTeleportEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.SoundCategory;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -84,5 +82,20 @@ public class MinecraftChannelDuplexHandler extends net.zeeraa.novacore.spigot.ab
             }
         }
         return value;
+    }
+
+    @Override
+    public boolean writePacket(Player player, Object o) {
+        if (o instanceof PacketPlayOutNamedSoundEffect) {
+            PacketPlayOutNamedSoundEffect packet = (PacketPlayOutNamedSoundEffect) o;
+            System.out.println(packet.b());
+            System.out.println(packet.c());
+            System.out.println(packet.d());
+            System.out.println(packet.e());
+            System.out.println(packet.f());
+            System.out.println(packet.g());
+            System.out.println(packet.h());
+        }
+        return true;
     }
 }

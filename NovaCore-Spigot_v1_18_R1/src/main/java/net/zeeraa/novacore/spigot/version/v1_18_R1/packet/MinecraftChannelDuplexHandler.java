@@ -87,4 +87,9 @@ public class MinecraftChannelDuplexHandler extends net.zeeraa.novacore.spigot.ab
 		}
 		return value;
 	}
+
+	@Override
+	public boolean writePacket(Player player, Object o) {
+		return false;
+	}
 }

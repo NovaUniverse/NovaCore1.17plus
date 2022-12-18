@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.item.EntityFallingBlock;
 import net.zeeraa.novacore.commons.log.Log;
 import net.zeeraa.novacore.commons.utils.ListUtils;
@@ -23,6 +24,7 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_18_R1.entity.CraftFallingBlock;
+import org.bukkit.craftbukkit.v1_18_R1.entity.CraftLightningStrike;
 import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_18_R1.util.CraftMagicNumbers;
 import org.bukkit.entity.*;
@@ -697,16 +699,6 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	}
 
 	@Override
-	public ShapedRecipe createShapedRecipeSafe(ItemStack result, Plugin owner, String key) {
-		return new ShapedRecipe(new NamespacedKey(owner, key.toLowerCase()), result);
-	}
-
-	@Override
-	public ShapelessRecipe createShapelessRecipe(ItemStack result, Plugin owner, String key) {
-		return new ShapelessRecipe(new NamespacedKey(owner, key.toLowerCase()), result);
-	}
-
-	@Override
 	public ItemStack getPlayerSkullitem() {
 		return new ItemStack(Material.PLAYER_HEAD, 1);
 	}
@@ -1150,5 +1142,15 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	@Override
 	public Block getBlockFromProjectileHitEvent(ProjectileHitEvent e) {
 		return e.getHitBlock();
+	}
+
+	@Override
+	public ShapedRecipe createShapedRecipeSafe(ItemStack result, Plugin owner, String key) {
+		return new ShapedRecipe(new NamespacedKey(owner, key.toLowerCase()), result);
+	}
+
+	@Override
+	public ShapelessRecipe createShapelessRecipe(ItemStack result, Plugin owner, String key) {
+		return new ShapelessRecipe(new NamespacedKey(owner, key.toLowerCase()), result);
 	}
 }
