@@ -1,19 +1,17 @@
 package net.zeeraa.novacore.spigot.version.v1_19_R2.packet;
 
-import net.minecraft.network.protocol.game.PacketPlayInArmAnimation;
-import net.minecraft.network.protocol.game.PacketPlayInBlockDig;
-import net.minecraft.network.protocol.game.PacketPlayInSettings;
-import net.minecraft.network.protocol.game.PacketPlayInSpectate;
+import net.minecraft.network.protocol.game.*;
+import net.minecraft.resources.MinecraftKey;
+import net.minecraft.sounds.SoundEffect;
 import net.zeeraa.novacore.spigot.abstraction.VersionIndependentUtils;
 import net.zeeraa.novacore.spigot.abstraction.enums.ChatVisibility;
 import net.zeeraa.novacore.spigot.abstraction.enums.Hand;
 import net.zeeraa.novacore.spigot.abstraction.enums.MainHand;
-import net.zeeraa.novacore.spigot.abstraction.packet.event.PlayerAttemptBreakBlockEvent;
-import net.zeeraa.novacore.spigot.abstraction.packet.event.PlayerSettingsEvent;
-import net.zeeraa.novacore.spigot.abstraction.packet.event.PlayerSwingEvent;
-import net.zeeraa.novacore.spigot.abstraction.packet.event.SpectatorTeleportEvent;
+import net.zeeraa.novacore.spigot.abstraction.enums.SoundCategory;
+import net.zeeraa.novacore.spigot.abstraction.packet.event.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -85,7 +83,40 @@ public class MinecraftChannelDuplexHandler extends net.zeeraa.novacore.spigot.ab
 	}
 
 	@Override
-	public boolean writePacket(Player player, Object o) {
-		return false;
+	public boolean writePacket(Player player, Object packet) {
+		List<Event> events = new ArrayList<>();
+		if (packet.getClass().equals(PacketPlayOutNamedSoundEffect.class)) {
+			PacketPlayOutNamedSoundEffect effect = (PacketPlayOutNamedSoundEffect) packet;
+
+			SoundCategory soundCategory = Arrays.stream(SoundCategory.values()).filter(sc -> sc.getName().equalsIgnoreCase(effect.c().a())).findFirst().get();
+			SoundEffect effect1 = effect.b().a();
+			MinecraftKey mcKey = effect1.a();
+			Sound foundSound = Arrays.stream(Sound.values()).filter(sound -> sound.getKey().toString().equalsIgnoreCase(mcKey.toString())).findFirst().get();
+			net.zeeraa.novacore.spigot.abstraction.enums.SoundCategory category = Arrays.stream(SoundCategory.values()).filter(sc -> sc.getName().equalsIgnoreCase(soundCategory.getName())).findFirst().get();
+
+
+			double x = effect.d();
+			double y = effect.e();
+			double z = effect.f();
+			float volume = effect.g();
+			float pitch = effect.h();
+
+
+			events.add(new PlayerListenSoundEvent(player, foundSound, category, x, y, z, volume, pitch));
+		}
+
+		if (events.isEmpty())
+			return true;
+
+		boolean value = true;
+		for (Event event : events) {
+			Bukkit.getPluginManager().callEvent(event);
+
+			if (((Cancellable) event).isCancelled()) {
+				value = false;
+				break;
+			}
+		}
+		return value;
 	}
 }
