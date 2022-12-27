@@ -1,18 +1,18 @@
 package net.zeeraa.novacore.spigot.version.v1_18_R2.packet;
 
 import net.minecraft.network.protocol.game.*;
+import net.minecraft.resources.MinecraftKey;
+import net.minecraft.sounds.SoundEffect;
 import net.minecraft.world.entity.player.EnumChatVisibility;
 import net.zeeraa.novacore.spigot.abstraction.VersionIndependentUtils;
 import net.zeeraa.novacore.spigot.abstraction.enums.ChatVisibility;
 import net.zeeraa.novacore.spigot.abstraction.enums.Hand;
 import net.zeeraa.novacore.spigot.abstraction.enums.MainHand;
-import net.zeeraa.novacore.spigot.abstraction.packet.event.PlayerAttemptBreakBlockEvent;
-import net.zeeraa.novacore.spigot.abstraction.packet.event.PlayerSettingsEvent;
-import net.zeeraa.novacore.spigot.abstraction.packet.event.PlayerSwingEvent;
-import net.zeeraa.novacore.spigot.abstraction.packet.event.SpectatorTeleportEvent;
+import net.zeeraa.novacore.spigot.abstraction.enums.SoundCategory;
+import net.zeeraa.novacore.spigot.abstraction.packet.event.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.SoundCategory;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -85,17 +85,40 @@ public class MinecraftChannelDuplexHandler extends net.zeeraa.novacore.spigot.ab
     }
 
     @Override
-    public boolean writePacket(Player player, Object o) {
-        if (o instanceof PacketPlayOutNamedSoundEffect) {
-            PacketPlayOutNamedSoundEffect packet = (PacketPlayOutNamedSoundEffect) o;
-            System.out.println(packet.b());
-            System.out.println(packet.c());
-            System.out.println(packet.d());
-            System.out.println(packet.e());
-            System.out.println(packet.f());
-            System.out.println(packet.g());
-            System.out.println(packet.h());
+    public boolean writePacket(Player player, Object packet) {
+        List<Event> events = new ArrayList<>();
+        if (packet.getClass().equals(PacketPlayOutNamedSoundEffect.class)) {
+            PacketPlayOutNamedSoundEffect effect = (PacketPlayOutNamedSoundEffect) packet;
+
+            SoundCategory soundCategory = Arrays.stream(SoundCategory.values()).filter(sc -> sc.getName().equalsIgnoreCase(effect.c().a())).findFirst().get();
+            SoundEffect effect1 = effect.b();
+            MinecraftKey mcKey = effect1.a();
+            Sound foundSound = Arrays.stream(Sound.values()).filter(sound -> sound.getKey().toString().equalsIgnoreCase(mcKey.toString())).findFirst().get();
+            net.zeeraa.novacore.spigot.abstraction.enums.SoundCategory category = Arrays.stream(SoundCategory.values()).filter(sc -> sc.getName().equalsIgnoreCase(soundCategory.getName())).findFirst().get();
+
+
+            double x = effect.d();
+            double y = effect.e();
+            double z = effect.f();
+            float volume = effect.g();
+            float pitch = effect.h();
+
+
+            events.add(new PlayerListenSoundEvent(player, foundSound, category, x, y, z, volume, pitch));
         }
-        return true;
+
+        if (events.isEmpty())
+            return true;
+
+        boolean value = true;
+        for (Event event : events) {
+            Bukkit.getPluginManager().callEvent(event);
+
+            if (((Cancellable) event).isCancelled()) {
+                value = false;
+                break;
+            }
+        }
+        return value;
     }
 }
