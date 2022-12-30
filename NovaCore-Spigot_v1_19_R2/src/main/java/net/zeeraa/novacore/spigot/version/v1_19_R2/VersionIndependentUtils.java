@@ -204,6 +204,12 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	}
 
 	private Material getColoredMaterial(DyeColor color, ColoredBlockType type) {
+		// For some reason this returned air every time so i decide to hard code it
+		// instead since i did not have a lot of time to fix the issue
+		if (color == DyeColor.WHITE && type == ColoredBlockType.GLASS_PANE) {
+			return Material.WHITE_STAINED_GLASS_PANE;
+		}
+
 		Material material;
 
 		if (type == ColoredBlockType.GLASS_BLOCK) {
