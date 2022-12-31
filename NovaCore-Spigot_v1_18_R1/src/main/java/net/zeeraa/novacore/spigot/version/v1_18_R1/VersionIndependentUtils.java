@@ -1159,4 +1159,9 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	public ShapelessRecipe createShapelessRecipe(ItemStack result, Plugin owner, String key) {
 		return new ShapelessRecipe(new NamespacedKey(owner, key.toLowerCase()), result);
 	}
+	
+	@Override
+	public Color bungeecordChatColorToBukkitColor(ChatColor color) {
+		return DefaultBunceecordColorMapper.getColorOfChatcolor(color);
+	}
 }

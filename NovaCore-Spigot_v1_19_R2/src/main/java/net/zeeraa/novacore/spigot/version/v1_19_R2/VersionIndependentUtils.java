@@ -11,6 +11,7 @@ import net.zeeraa.novacore.spigot.abstraction.*;
 import net.zeeraa.novacore.spigot.abstraction.commons.AttributeInfo;
 import net.zeeraa.novacore.spigot.abstraction.enums.*;
 import net.zeeraa.novacore.spigot.abstraction.packet.PacketManager;
+import net.zeeraa.novacore.spigot.abstraction.DefaultBunceecordColorMapper;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
@@ -1160,5 +1161,10 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	@Override
 	public ShapelessRecipe createShapelessRecipe(ItemStack result, Plugin owner, String key) {
 		return new ShapelessRecipe(new NamespacedKey(owner, key.toLowerCase()), result);
+	}
+	
+	@Override
+	public Color bungeecordChatColorToBukkitColor(ChatColor color) {
+		return DefaultBunceecordColorMapper.getColorOfChatcolor(color);
 	}
 }
