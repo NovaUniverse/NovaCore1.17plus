@@ -11,6 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.PacketPlayOutEntityStatus;
 import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntity;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.entity.EntityTypes;
@@ -1178,5 +1179,25 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	@Override
 	public Color bungeecordChatColorToBukkitColor(ChatColor color) {
 		return DefaultBunceecordColorMapper.getColorOfChatcolor(color);
+	}
+
+	@Override
+	public void displayTotem(Player player) {
+		PacketPlayOutEntityStatus packet = new PacketPlayOutEntityStatus(((CraftPlayer) player).getHandle(), (byte) 35);
+		((CraftPlayer) player).getHandle().b.a(packet);
+	}
+
+	@Override
+	public void displayCustomTotem(Player player, int cmd) {
+		ItemStack totem = new ItemStack(Material.TOTEM_OF_UNDYING);
+		ItemMeta meta = totem.getItemMeta();
+		assert meta != null;
+		meta.setCustomModelData(cmd);
+		totem.setItemMeta(meta);
+		ItemStack hand = player.getInventory().getItemInMainHand();
+		player.getInventory().setItemInMainHand(totem);
+		PacketPlayOutEntityStatus packet = new PacketPlayOutEntityStatus(((CraftPlayer) player).getHandle(), (byte) 35);
+		((CraftPlayer) player).getHandle().b.a(packet);
+		player.getInventory().setItemInMainHand(hand);
 	}
 }
