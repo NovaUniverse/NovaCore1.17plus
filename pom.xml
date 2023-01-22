@@ -11,8 +11,8 @@
 	<url>https://zeeraa.net</url>
 	
 	<properties>
-		<maven.compiler.source>1.17</maven.compiler.source>
-		<maven.compiler.target>1.17</maven.compiler.target>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 
         <maven-compiler-plugin-version>3.10.0</maven-compiler-plugin-version>
 		<maven-shade-plugin-version>3.2.4</maven-shade-plugin-version>
