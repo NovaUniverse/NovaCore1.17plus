@@ -4,7 +4,7 @@ import net.zeeraa.novacore.spigot.abstraction.CommandRegistrator;
 import net.zeeraa.novacore.spigot.abstraction.Listeners;
 import net.zeeraa.novacore.spigot.abstraction.VersionIndependentUtils;
 
-public class VersionIndependentLoader implements net.zeeraa.novacore.spigot.abstraction.VersionIndependantLoader {
+public class VersionIndependentLoader extends net.zeeraa.novacore.spigot.abstraction.VersionIndependantLoader {
 	@Override
 	public CommandRegistrator getCommandRegistrator() {
 		return new net.zeeraa.novacore.spigot.version.v1_19_R1.CommandRegistrator();

@@ -3,7 +3,6 @@ package net.zeeraa.novacore.spigot.version.v1_18_R1.packet;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.sounds.SoundEffect;
-import net.minecraft.world.entity.player.EnumChatVisibility;
 import net.zeeraa.novacore.spigot.abstraction.VersionIndependentUtils;
 import net.zeeraa.novacore.spigot.abstraction.enums.ChatVisibility;
 import net.zeeraa.novacore.spigot.abstraction.enums.Hand;
@@ -11,7 +10,6 @@ import net.zeeraa.novacore.spigot.abstraction.enums.MainHand;
 import net.zeeraa.novacore.spigot.abstraction.enums.SoundCategory;
 import net.zeeraa.novacore.spigot.abstraction.packet.event.*;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -70,6 +68,9 @@ public class MinecraftChannelDuplexHandler extends net.zeeraa.novacore.spigot.ab
 			case c:
 				playersDigging.remove(player);
 				break;
+
+			default:
+				break;
 			}
 		}
 		if (events.isEmpty())
@@ -98,13 +99,11 @@ public class MinecraftChannelDuplexHandler extends net.zeeraa.novacore.spigot.ab
 			Sound foundSound = Arrays.stream(Sound.values()).filter(sound -> sound.getKey().toString().equalsIgnoreCase(mcKey.toString())).findFirst().get();
 			net.zeeraa.novacore.spigot.abstraction.enums.SoundCategory category = Arrays.stream(SoundCategory.values()).filter(sc -> sc.getName().equalsIgnoreCase(soundCategory.getName())).findFirst().get();
 
-
 			double x = effect.d();
 			double y = effect.e();
 			double z = effect.f();
 			float volume = effect.g();
 			float pitch = effect.h();
-
 
 			events.add(new PlayerListenSoundEvent(player, foundSound, category, x, y, z, volume, pitch));
 		}

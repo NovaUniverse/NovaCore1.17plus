@@ -1,7 +1,6 @@
 package net.zeeraa.novacore.spigot.version.v1_18_R1;
 
 import java.lang.reflect.Field;
-import java.util.*;
 
 import net.md_5.bungee.api.ChatColor;
 import net.minecraft.nbt.NBTTagCompound;
@@ -9,26 +8,47 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityStatus;
-import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.item.EntityFallingBlock;
 import net.zeeraa.novacore.commons.log.Log;
 import net.zeeraa.novacore.commons.utils.ListUtils;
 import net.zeeraa.novacore.commons.utils.LoopableIterator;
-import net.zeeraa.novacore.spigot.abstraction.*;
-
+import net.zeeraa.novacore.spigot.abstraction.ChunkLoader;
+import net.zeeraa.novacore.spigot.abstraction.DefaultBunceecordColorMapper;
+import net.zeeraa.novacore.spigot.abstraction.ItemBuilderRecordList;
+import net.zeeraa.novacore.spigot.abstraction.MaterialNameList;
+import net.zeeraa.novacore.spigot.abstraction.VersionIndependentItems;
 import net.zeeraa.novacore.spigot.abstraction.commons.AttributeInfo;
-import net.zeeraa.novacore.spigot.abstraction.enums.*;
-import net.zeeraa.novacore.spigot.abstraction.packet.PacketManager;
-import org.bukkit.*;
+import net.zeeraa.novacore.spigot.abstraction.enums.ColoredBlockType;
+import net.zeeraa.novacore.spigot.abstraction.enums.DeathType;
+import net.zeeraa.novacore.spigot.abstraction.enums.NovaCoreGameVersion;
+import net.zeeraa.novacore.spigot.abstraction.enums.PlayerDamageReason;
+import net.zeeraa.novacore.spigot.abstraction.enums.VersionIndependenceLayerError;
+import net.zeeraa.novacore.spigot.abstraction.enums.VersionIndependentMaterial;
+import net.zeeraa.novacore.spigot.abstraction.enums.VersionIndependentSound;
+
+import org.bukkit.Bukkit;
+import org.bukkit.DyeColor;
+import org.bukkit.FluidCollisionMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_18_R1.entity.CraftFallingBlock;
-import org.bukkit.craftbukkit.v1_18_R1.entity.CraftLightningStrike;
+import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_18_R1.util.CraftMagicNumbers;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Creature;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.FallingBlock;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -49,18 +69,22 @@ import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 
 import net.zeeraa.novacore.spigot.abstraction.log.AbstractionLogger;
+import net.zeeraa.novacore.spigot.abstraction.packet.PacketManager;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.server.MinecraftServer;
 import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17;
-import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.RayTraceResult;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
 import java.util.function.Consumer;
-
 
 public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstraction.VersionIndependentUtils {
 	private ItemBuilderRecordList itemBuilderRecordList;
@@ -76,7 +100,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		}
 		return chunkLoader;
 	}
-	
+
 	public VersionIndependentUtils() {
 		itemBuilderRecordList = new ItemBuilderRecordListv1_17();
 	}
@@ -543,7 +567,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 
 		case ITEM_BREAK:
 			return Sound.ENTITY_ITEM_BREAK;
-			
+
 		case ITEM_PICKUP:
 			return Sound.ENTITY_ITEM_PICKUP;
 
@@ -552,13 +576,13 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 
 		case ANVIL_LAND:
 			return Sound.BLOCK_ANVIL_LAND;
-			
+
 		case EXPLODE:
 			return Sound.ENTITY_GENERIC_EXPLODE;
 
 		case LEVEL_UP:
 			return Sound.ENTITY_PLAYER_LEVELUP;
-			
+
 		case WITHER_SHOOT:
 			return Sound.ENTITY_WITHER_SHOOT;
 
@@ -567,10 +591,10 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 
 		case ANVIL_BREAK:
 			return Sound.BLOCK_ANVIL_BREAK;
-			
+
 		case FIZZ:
 			return Sound.BLOCK_FIRE_EXTINGUISH;
-			
+
 		case ENDERMAN_TELEPORT:
 			return Sound.ENTITY_ENDERMAN_TELEPORT;
 
@@ -638,64 +662,64 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 
 		case DIAMOND_SHOVEL:
 			return Material.DIAMOND_SHOVEL;
-			
+
 		case SNOWBALL:
 			return Material.SNOWBALL;
-			
+
 		case FARMLAND:
 			return Material.FARMLAND;
-			
+
 		case GOLDEN_AXE:
 			return Material.GOLDEN_AXE;
-			
+
 		case GOLDEN_HOE:
 			return Material.GOLDEN_HOE;
-			
+
 		case GOLDEN_PICKAXE:
 			return Material.GOLDEN_PICKAXE;
-			
+
 		case GOLDEN_SHOVEL:
 			return Material.GOLDEN_SHOVEL;
-			
+
 		case GOLDEN_SWORD:
 			return Material.GOLDEN_SWORD;
-			
+
 		case WOODEN_AXE:
 			return Material.WOODEN_AXE;
-			
+
 		case WOODEN_HOE:
 			return Material.WOODEN_HOE;
-			
+
 		case WOODEN_PICKAXE:
 			return Material.WOODEN_PICKAXE;
-			
+
 		case WOODEN_SHOVEL:
 			return Material.WOODEN_SHOVEL;
-			
+
 		case WOODEN_SWORD:
 			return Material.WOODEN_SWORD;
-			
+
 		case WATCH:
 			return Material.CLOCK;
-			
+
 		case GOLD_HELMET:
 			return Material.GOLDEN_HELMET;
-			
+
 		case GOLD_CHESTPLATE:
 			return Material.GOLDEN_CHESTPLATE;
-			
+
 		case GOLD_LEGGINGS:
 			return Material.GOLDEN_LEGGINGS;
-			
+
 		case GOLD_BOOTS:
 			return Material.GOLDEN_BOOTS;
-			
+
 		case GRILLED_PORK:
 			return Material.COOKED_PORKCHOP;
 
 		case EXP_BOTTLE:
 			return Material.EXPERIENCE_BOTTLE;
-			
+
 		default:
 			setLastError(VersionIndependenceLayerError.MISSING_MATERIAL);
 			AbstractionLogger.getLogger().warning("VersionIndependentUtils", "Unknown version Independent material: " + material.name());
@@ -725,17 +749,17 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 
 		return false;
 	}
-	
+
 	@Override
 	public void sendActionBarMessage(Player player, String message) {
-		player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));		
+		player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
 	}
 
 	@Override
 	public int getMinY() {
 		return 0;
 	}
-	
+
 	@Override
 	public ItemMeta setUnbreakable(ItemMeta meta, boolean unbreakable) {
 		meta.setUnbreakable(unbreakable);
@@ -746,7 +770,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	public void setCreatureItemInMainHand(Creature creature, ItemStack item) {
 		creature.getEquipment().setItemInMainHand(item);
 	}
-	
+
 	@Override
 	public float getPlayerBodyRotation(Player player) {
 		CraftPlayer craftPlayer = (CraftPlayer) player;
@@ -763,17 +787,17 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	public void setGameRule(World world, String rule, String value) {
 		world.setGameRuleValue(rule, value);
 	}
-	
+
 	@Override
 	public boolean isInteractEventMainHand(PlayerInteractEvent e) {
 		return e.getHand() == EquipmentSlot.HAND;
 	}
-	
+
 	@Override
 	public Entity getEntityByUUID(UUID uuid) {
 		return Bukkit.getEntity(uuid);
 	}
-	
+
 	@Override
 	public void setShapedRecipeIngredientAsDye(ShapedRecipe recipe, char ingredient, DyeColor color) {
 		recipe.setIngredient(ingredient, DyeColorToMaterialMapper_1_17.dyeColorToMaterial(color));
@@ -798,171 +822,171 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	@Override
 	public DeathType getDeathTypeFromDamage(EntityDamageEvent e, Entity lastDamager) {
 		switch (e.getCause()) {
-			case FIRE:
+		case FIRE:
+			if (lastDamager != null)
+				return DeathType.FIRE_SOURCE_COMBAT;
+			return DeathType.FIRE_SOURCE;
+		case LAVA:
+			if (lastDamager != null)
+				return DeathType.LAVA_COMBAT;
+			return DeathType.LAVA;
+		case FALL:
+			if (e.getOriginalDamage(EntityDamageEvent.DamageModifier.BASE) <= 2.0) {
 				if (lastDamager != null)
-					return DeathType.FIRE_SOURCE_COMBAT;
-				return DeathType.FIRE_SOURCE;
-			case LAVA:
-				if (lastDamager != null)
-					return DeathType.LAVA_COMBAT;
-				return DeathType.LAVA;
-			case FALL:
-				if (e.getOriginalDamage(EntityDamageEvent.DamageModifier.BASE) <= 2.0) {
-					if (lastDamager != null)
-						return DeathType.FALL_SMALL_COMBAT;
-					return DeathType.FALL_SMALL;
+					return DeathType.FALL_SMALL_COMBAT;
+				return DeathType.FALL_SMALL;
+			} else {
+				return DeathType.FALL_BIG;
+			}
+		case VOID:
+			if (lastDamager != null)
+				return DeathType.VOID_COMBAT;
+			return DeathType.VOID;
+
+		case THORNS:
+			return DeathType.THORNS;
+		case WITHER:
+			if (lastDamager != null)
+				return DeathType.EFFECT_WITHER_COMBAT;
+			return DeathType.EFFECT_WITHER;
+
+		case CONTACT:
+			if (e instanceof EntityDamageByBlockEvent) {
+				EntityDamageByBlockEvent blockEvent = (EntityDamageByBlockEvent) e;
+				if (lastDamager != null) {
+					if (blockEvent.getDamager().getType() == Material.SWEET_BERRY_BUSH)
+						return DeathType.BUSH_COMBAT;
+					else if (blockEvent.getDamager().getType() == Material.CACTUS)
+						return DeathType.CACTUS_COMBAT;
+					else if (blockEvent.getDamager().getType() == Material.POINTED_DRIPSTONE)
+						return DeathType.FALL_STALAGMITE_COMBAT;
 				} else {
-					return DeathType.FALL_BIG;
+					if (blockEvent.getDamager().getType() == Material.SWEET_BERRY_BUSH)
+						return DeathType.BUSH;
+					else if (blockEvent.getDamager().getType() == Material.CACTUS)
+						return DeathType.CACTUS;
+					else if (blockEvent.getDamager().getType() == Material.POINTED_DRIPSTONE)
+						return DeathType.FALL_STALAGMITE;
 				}
-			case VOID:
-				if (lastDamager != null)
-					return DeathType.VOID_COMBAT;
-				return DeathType.VOID;
+			}
+		case DROWNING:
+			if (lastDamager != null)
+				return DeathType.DROWN_COMBAT;
+			return DeathType.DROWN;
 
-			case THORNS:
-				return DeathType.THORNS;
+		case LIGHTNING:
+			if (lastDamager != null)
+				return DeathType.LIGHTNING_COMBAT;
+			return DeathType.LIGHTNING;
+
+		case PROJECTILE:
+			if (lastDamager.getType() == EntityType.ARROW) {
+				return DeathType.PROJECTILE_ARROW;
+			}
+			return DeathType.PROJECTILE_OTHER;
+		case STARVATION:
+			if (lastDamager != null)
+				return DeathType.STARVING_COMBAT;
+			return DeathType.STARVING;
+
+		case SUFFOCATION:
+			if (lastDamager != null)
+				return DeathType.SUFFOCATION_COMBAT;
+			return DeathType.SUFFOCATION;
+		case ENTITY_ATTACK:
+		case ENTITY_SWEEP_ATTACK:
+			switch (lastDamager.getType()) {
 			case WITHER:
-				if (lastDamager != null)
-					return DeathType.EFFECT_WITHER_COMBAT;
-				return DeathType.EFFECT_WITHER;
-
-			case CONTACT:
-				if (e instanceof EntityDamageByBlockEvent) {
-					EntityDamageByBlockEvent blockEvent = (EntityDamageByBlockEvent) e;
-					if (lastDamager != null) {
-						if (blockEvent.getDamager().getType() == Material.SWEET_BERRY_BUSH)
-							return DeathType.BUSH_COMBAT;
-						else if (blockEvent.getDamager().getType() == Material.CACTUS)
-							return DeathType.CACTUS_COMBAT;
-						else if (blockEvent.getDamager().getType() == Material.POINTED_DRIPSTONE)
-							return DeathType.FALL_STALAGMITE_COMBAT;
-					} else {
-						if (blockEvent.getDamager().getType() == Material.SWEET_BERRY_BUSH)
-							return DeathType.BUSH;
-						else if (blockEvent.getDamager().getType() == Material.CACTUS)
-							return DeathType.CACTUS;
-						else if (blockEvent.getDamager().getType() == Material.POINTED_DRIPSTONE)
-							return DeathType.FALL_STALAGMITE;
+				return DeathType.COMBAT_WITHER_SKULL;
+			case FIREBALL:
+			case SMALL_FIREBALL:
+				return DeathType.COMBAT_FIREBALL;
+			case BEE:
+				return DeathType.COMBAT_BEE;
+			default:
+				return DeathType.COMBAT_NORMAL;
+			}
+		case FALLING_BLOCK:
+			if (e instanceof EntityDamageByEntityEvent) {
+				EntityDamageByEntityEvent entityEvent = (EntityDamageByEntityEvent) e;
+				if (entityEvent.getDamager() instanceof FallingBlock) {
+					FallingBlock block = (FallingBlock) entityEvent.getDamager();
+					switch (block.getBlockData().getMaterial()) {
+					case ANVIL:
+						if (lastDamager != null)
+							return DeathType.ANVIL_FALL_COMBAT;
+						return DeathType.ANVIL_FALL;
+					case POINTED_DRIPSTONE:
+						if (lastDamager != null)
+							return DeathType.STALAGTITE_FALL_COMBAT;
+						return DeathType.STALAGTITE_FALL;
+					default:
+						if (lastDamager != null)
+							return DeathType.BLOCK_FALL_COMBAT;
+						return DeathType.BLOCK_FALL;
 					}
 				}
-			case DROWNING:
-				if (lastDamager != null)
-					return DeathType.DROWN_COMBAT;
-				return DeathType.DROWN;
+			}
+		case BLOCK_EXPLOSION:
+		case ENTITY_EXPLOSION:
+			if (lastDamager != null)
+				return DeathType.EXPLOSION_COMBAT;
+			return DeathType.EXPLOSION;
 
-			case LIGHTNING:
-				if (lastDamager != null)
-					return DeathType.LIGHTNING_COMBAT;
-				return DeathType.LIGHTNING;
+		case FIRE_TICK:
+			if (lastDamager != null)
+				return DeathType.FIRE_NATURAL_COMBAT;
+			return DeathType.FIRE_NATURAL;
 
-			case PROJECTILE:
-				if (lastDamager.getType() == EntityType.ARROW) {
-					return DeathType.PROJECTILE_ARROW;
-				}
-				return DeathType.PROJECTILE_OTHER;
-			case STARVATION:
-				if (lastDamager != null)
-					return DeathType.STARVING_COMBAT;
-				return DeathType.STARVING;
-
-			case SUFFOCATION:
-				if (lastDamager != null)
-					return DeathType.SUFFOCATION_COMBAT;
-				return DeathType.SUFFOCATION;
-			case ENTITY_ATTACK:
-			case ENTITY_SWEEP_ATTACK:
-				switch (lastDamager.getType()) {
-					case WITHER:
-						return DeathType.COMBAT_WITHER_SKULL;
-					case FIREBALL:
-					case SMALL_FIREBALL:
-						return DeathType.COMBAT_FIREBALL;
-					case BEE:
-						return DeathType.COMBAT_BEE;
-					default:
-						return DeathType.COMBAT_NORMAL;
-				}
-			case FALLING_BLOCK:
+		case MAGIC:
+			DeathType type = DeathType.MAGIC;
+			if (lastDamager != null) {
 				if (e instanceof EntityDamageByEntityEvent) {
 					EntityDamageByEntityEvent entityEvent = (EntityDamageByEntityEvent) e;
-					if (entityEvent.getDamager() instanceof FallingBlock) {
-						FallingBlock block = (FallingBlock) entityEvent.getDamager();
-						switch (block.getBlockData().getMaterial()) {
-							case ANVIL:
-								if (lastDamager != null)
-									return DeathType.ANVIL_FALL_COMBAT;
-								return DeathType.ANVIL_FALL;
-							case POINTED_DRIPSTONE:
-								if (lastDamager != null)
-									return DeathType.STALAGTITE_FALL_COMBAT;
-								return DeathType.STALAGTITE_FALL;
-							default:
-								if (lastDamager != null)
-									return DeathType.BLOCK_FALL_COMBAT;
-								return DeathType.BLOCK_FALL;
-						}
-					}
-				}
-			case BLOCK_EXPLOSION:
-			case ENTITY_EXPLOSION:
-				if (lastDamager != null)
-					return DeathType.EXPLOSION_COMBAT;
-				return DeathType.EXPLOSION;
-
-			case FIRE_TICK:
-				if (lastDamager != null)
-					return DeathType.FIRE_NATURAL_COMBAT;
-				return DeathType.FIRE_NATURAL;
-
-			case MAGIC:
-				DeathType type = DeathType.MAGIC;
-				if (lastDamager != null) {
-					if (e instanceof EntityDamageByEntityEvent) {
-						EntityDamageByEntityEvent entityEvent = (EntityDamageByEntityEvent) e;
-						if (entityEvent.getDamager() instanceof ThrownPotion) {
-							ThrownPotion potion = (ThrownPotion) entityEvent.getDamager();
-							if (potion.getShooter() instanceof Entity) {
-								if (((Entity) potion.getShooter()).getUniqueId().toString().equalsIgnoreCase(lastDamager.getUniqueId().toString())) {
-									type = DeathType.MAGIC_COMBAT;
-								} else {
-									type = DeathType.MAGIC_COMBAT_ACCIDENT;
-								}
+					if (entityEvent.getDamager() instanceof ThrownPotion) {
+						ThrownPotion potion = (ThrownPotion) entityEvent.getDamager();
+						if (potion.getShooter() instanceof Entity) {
+							if (((Entity) potion.getShooter()).getUniqueId().toString().equalsIgnoreCase(lastDamager.getUniqueId().toString())) {
+								type = DeathType.MAGIC_COMBAT;
+							} else {
+								type = DeathType.MAGIC_COMBAT_ACCIDENT;
 							}
 						}
 					}
 				}
-				return type;
-			case CRAMMING:
-				if (lastDamager != null)
-					return DeathType.SUFFOCATION_CRAMMING_COMBAT;
-				return DeathType.SUFFOCATION_COMBAT;
+			}
+			return type;
+		case CRAMMING:
+			if (lastDamager != null)
+				return DeathType.SUFFOCATION_CRAMMING_COMBAT;
+			return DeathType.SUFFOCATION_COMBAT;
 
-			case HOT_FLOOR:
-				if (lastDamager != null)
-					return DeathType.MAGMA_BLOCK_COMBAT;
-				return DeathType.MAGMA_BLOCK;
+		case HOT_FLOOR:
+			if (lastDamager != null)
+				return DeathType.MAGMA_BLOCK_COMBAT;
+			return DeathType.MAGMA_BLOCK;
 
-			case DRAGON_BREATH:
-				if (lastDamager != null)
-					return DeathType.DRAGON_BREATH_COMBAT;
-				return DeathType.DRAGON_BREATH;
-			case FLY_INTO_WALL:
-				if (lastDamager != null)
-					return DeathType.ELYTRA_WALL_COMBAT;
-				return DeathType.ELYTRA_WALL;
-			case FREEZE:
-				if (lastDamager != null)
-					return DeathType.FROZEN_COMBAT;
-				return DeathType.FROZEN;
-			case SUICIDE:
-			case DRYOUT:
-			case CUSTOM:
-			case MELTING:
-			case POISON:
-			default:
-				if (lastDamager != null)
-					return DeathType.GENERIC_COMBAT;
-				return DeathType.GENERIC;
+		case DRAGON_BREATH:
+			if (lastDamager != null)
+				return DeathType.DRAGON_BREATH_COMBAT;
+			return DeathType.DRAGON_BREATH;
+		case FLY_INTO_WALL:
+			if (lastDamager != null)
+				return DeathType.ELYTRA_WALL_COMBAT;
+			return DeathType.ELYTRA_WALL;
+		case FREEZE:
+			if (lastDamager != null)
+				return DeathType.FROZEN_COMBAT;
+			return DeathType.FROZEN;
+		case SUICIDE:
+		case DRYOUT:
+		case CUSTOM:
+		case MELTING:
+		case POISON:
+		default:
+			if (lastDamager != null)
+				return DeathType.GENERIC_COMBAT;
+			return DeathType.GENERIC;
 		}
 	}
 
@@ -998,11 +1022,10 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		return finalBuild.toString();
 	}
 
-
-
 	@Override
 	public PacketManager getPacketManager() {
-		if (packetManager == null) packetManager = new net.zeeraa.novacore.spigot.version.v1_18_R1.packet.PacketManager();
+		if (packetManager == null)
+			packetManager = new net.zeeraa.novacore.spigot.version.v1_18_R1.packet.PacketManager();
 		return packetManager;
 	}
 
@@ -1032,6 +1055,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 
 		return false;
 	}
+
 	@Override
 	public MaterialNameList getMaterialNameList() {
 		// I believe 1.16+ has all names mirror their Material type, if not tell me
@@ -1063,6 +1087,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 			Log.warn("NovaCore", "Packet sent isnt instance of " + Packet.class.getCanonicalName());
 		}
 	}
+
 	@Override
 	public void addAttribute(ItemStack item, ItemMeta meta, AttributeInfo attributeInfo) {
 		if (attributeInfo == null) {
@@ -1095,6 +1120,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 			}
 		}
 	}
+
 	@Override
 	public Block getTargetBlockExact(LivingEntity entity, int distance, List<Material> ignore) {
 		RayTraceResult returned;
@@ -1117,9 +1143,10 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		ignore.add(Material.WATER);
 		return getTargetBlockExact(entity, 5, ignore);
 	}
+
 	@Override
 	public FallingBlock spawnFallingBlock(Location location, Material material, byte data, Consumer<FallingBlock> consumer) {
-		EntityFallingBlock fb = new EntityFallingBlock(((CraftWorld)location.getWorld()).getHandle(), location.getX(), location.getY(), location.getZ(), CraftMagicNumbers.getBlock(material).n());
+		EntityFallingBlock fb = new EntityFallingBlock(((CraftWorld) location.getWorld()).getHandle(), location.getX(), location.getY(), location.getZ(), CraftMagicNumbers.getBlock(material).n());
 		fb.b = 1;
 		if (fb.getBukkitEntity() instanceof CraftFallingBlock) {
 			CraftFallingBlock cfb = (CraftFallingBlock) fb.getBukkitEntity();
@@ -1130,6 +1157,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 			throw new IllegalStateException("[VersionIndependentUtils] An unexpected error occurred");
 		}
 	}
+
 	@Override
 	public void setPotionEffect(ItemStack item, ItemMeta meta, PotionEffect effect, boolean color) {
 		if (meta instanceof PotionMeta) {
@@ -1163,7 +1191,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	public ShapelessRecipe createShapelessRecipe(ItemStack result, Plugin owner, String key) {
 		return new ShapelessRecipe(new NamespacedKey(owner, key.toLowerCase()), result);
 	}
-	
+
 	@Override
 	public Color bungeecordChatColorToBukkitColor(ChatColor color) {
 		return DefaultBunceecordColorMapper.getColorOfChatcolor(color);
