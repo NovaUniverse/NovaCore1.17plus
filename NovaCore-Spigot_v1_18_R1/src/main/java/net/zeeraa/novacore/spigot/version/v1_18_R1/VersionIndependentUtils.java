@@ -13,7 +13,7 @@ import net.zeeraa.novacore.commons.log.Log;
 import net.zeeraa.novacore.commons.utils.ListUtils;
 import net.zeeraa.novacore.commons.utils.LoopableIterator;
 import net.zeeraa.novacore.spigot.abstraction.ChunkLoader;
-import net.zeeraa.novacore.spigot.abstraction.DefaultBunceecordColorMapper;
+import net.zeeraa.novacore.spigot.abstraction.DefaultBungeecordColorMapper;
 import net.zeeraa.novacore.spigot.abstraction.ItemBuilderRecordList;
 import net.zeeraa.novacore.spigot.abstraction.MaterialNameList;
 import net.zeeraa.novacore.spigot.abstraction.VersionIndependentItems;
@@ -1193,8 +1193,8 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	}
 
 	@Override
-	public Color bungeecordChatColorToBukkitColor(ChatColor color) {
-		return DefaultBunceecordColorMapper.getColorOfChatcolor(color);
+	public Color bungeecordChatColorToJavaColor(ChatColor color) {
+		return DefaultBungeecordColorMapper.getColorOfChatcolor(color);
 	}
 
 	@Override
