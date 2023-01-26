@@ -1,59 +1,42 @@
 package net.zeeraa.novacore.spigot.version.v1_18_R2;
 
-import java.lang.reflect.Field;
-
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+import com.mojang.authlib.properties.PropertyMap;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityStatus;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.item.EntityFallingBlock;
+import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17;
 import net.zeeraa.novacore.commons.log.Log;
 import net.zeeraa.novacore.commons.utils.ListUtils;
 import net.zeeraa.novacore.commons.utils.LoopableIterator;
 import net.zeeraa.novacore.spigot.abstraction.ChunkLoader;
-import net.zeeraa.novacore.spigot.abstraction.DefaultBungeecordColorMapper;
 import net.zeeraa.novacore.spigot.abstraction.ItemBuilderRecordList;
 import net.zeeraa.novacore.spigot.abstraction.MaterialNameList;
 import net.zeeraa.novacore.spigot.abstraction.VersionIndependentItems;
 import net.zeeraa.novacore.spigot.abstraction.commons.AttributeInfo;
-import net.zeeraa.novacore.spigot.abstraction.enums.ColoredBlockType;
-import net.zeeraa.novacore.spigot.abstraction.enums.DeathType;
-import net.zeeraa.novacore.spigot.abstraction.enums.NovaCoreGameVersion;
-import net.zeeraa.novacore.spigot.abstraction.enums.PlayerDamageReason;
-import net.zeeraa.novacore.spigot.abstraction.enums.VersionIndependenceLayerError;
-import net.zeeraa.novacore.spigot.abstraction.enums.VersionIndependentMaterial;
-import net.zeeraa.novacore.spigot.abstraction.enums.VersionIndependentSound;
-
-import org.bukkit.Bukkit;
-import org.bukkit.DyeColor;
-import org.bukkit.FluidCollisionMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Sound;
-import org.bukkit.World;
+import net.zeeraa.novacore.spigot.abstraction.enums.*;
+import net.zeeraa.novacore.spigot.abstraction.log.AbstractionLogger;
+import net.zeeraa.novacore.spigot.abstraction.packet.PacketManager;
+import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_18_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_18_R2.entity.CraftFallingBlock;
+import org.bukkit.craftbukkit.v1_18_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_18_R2.util.CraftMagicNumbers;
-import org.bukkit.entity.Creature;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.FallingBlock;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.ThrownPotion;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityDamageByBlockEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.entity.*;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -63,28 +46,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.map.MapView;
-
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
-import com.mojang.authlib.properties.PropertyMap;
-
-import net.zeeraa.novacore.spigot.abstraction.log.AbstractionLogger;
-import net.zeeraa.novacore.spigot.abstraction.packet.PacketManager;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.minecraft.server.MinecraftServer;
-import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17;
-import org.bukkit.craftbukkit.v1_18_R2.entity.CraftPlayer;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.RayTraceResult;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstraction.VersionIndependentUtils {
@@ -101,7 +70,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		}
 		return chunkLoader;
 	}
-	
+
 	public VersionIndependentUtils() {
 		itemBuilderRecordList = new ItemBuilderRecordListv1_17();
 	}
@@ -188,28 +157,28 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 
 		/*
 		 * DamageSource source;
-		 * 
+		 *
 		 * switch (reason) { case FALL: source = DamageSource.FALL;
-		 * 
+		 *
 		 * case FALLING_BLOCK: source = DamageSource.FALLING_BLOCK; break; case
 		 * OUT_OF_WORLD: source = DamageSource.OUT_OF_WORLD; break;
-		 * 
+		 *
 		 * case BURN: source = DamageSource.BURN; break;
-		 * 
+		 *
 		 * case LIGHTNING: source = DamageSource.LIGHTNING; break;
-		 * 
+		 *
 		 * case MAGIC: source = DamageSource.MAGIC; break;
-		 * 
+		 *
 		 * case DROWN: source = DamageSource.DROWN; break;
-		 * 
+		 *
 		 * case STARVE: source = DamageSource.STARVE; break;
-		 * 
+		 *
 		 * case LAVA: source = DamageSource.LAVA; break;
-		 * 
+		 *
 		 * case GENERIC: source = DamageSource.GENERIC; break;
-		 * 
+		 *
 		 * default: source = DamageSource.GENERIC; break; }
-		 * 
+		 *
 		 * ((CraftPlayer) player).getHandle().damageEntity(source, damage);
 		 */
 	}
@@ -248,282 +217,282 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 
 		if (type == ColoredBlockType.GLASS_BLOCK) {
 			switch (color) {
-			case BLACK:
-				material = Material.BLACK_STAINED_GLASS;
-				break;
+				case BLACK:
+					material = Material.BLACK_STAINED_GLASS;
+					break;
 
-			case BLUE:
-				material = Material.BLUE_STAINED_GLASS;
-				break;
+				case BLUE:
+					material = Material.BLUE_STAINED_GLASS;
+					break;
 
-			case BROWN:
-				material = Material.BROWN_STAINED_GLASS;
-				break;
+				case BROWN:
+					material = Material.BROWN_STAINED_GLASS;
+					break;
 
-			case CYAN:
-				material = Material.CYAN_STAINED_GLASS;
-				break;
+				case CYAN:
+					material = Material.CYAN_STAINED_GLASS;
+					break;
 
-			case GRAY:
-				material = Material.LIGHT_GRAY_STAINED_GLASS;
-				break;
+				case GRAY:
+					material = Material.LIGHT_GRAY_STAINED_GLASS;
+					break;
 
-			case GREEN:
-				material = Material.GREEN_STAINED_GLASS;
-				break;
+				case GREEN:
+					material = Material.GREEN_STAINED_GLASS;
+					break;
 
-			case LIGHT_BLUE:
-				material = Material.LIGHT_BLUE_STAINED_GLASS;
-				break;
+				case LIGHT_BLUE:
+					material = Material.LIGHT_BLUE_STAINED_GLASS;
+					break;
 
-			case LIGHT_GRAY:
-				material = Material.LIGHT_GRAY_STAINED_GLASS;
-				break;
+				case LIGHT_GRAY:
+					material = Material.LIGHT_GRAY_STAINED_GLASS;
+					break;
 
-			case LIME:
-				material = Material.LIME_STAINED_GLASS;
-				break;
+				case LIME:
+					material = Material.LIME_STAINED_GLASS;
+					break;
 
-			case MAGENTA:
-				material = Material.MAGENTA_STAINED_GLASS;
-				break;
+				case MAGENTA:
+					material = Material.MAGENTA_STAINED_GLASS;
+					break;
 
-			case ORANGE:
-				material = Material.ORANGE_STAINED_GLASS;
-				break;
+				case ORANGE:
+					material = Material.ORANGE_STAINED_GLASS;
+					break;
 
-			case PINK:
-				material = Material.PINK_STAINED_GLASS;
-				break;
+				case PINK:
+					material = Material.PINK_STAINED_GLASS;
+					break;
 
-			case PURPLE:
-				material = Material.PURPLE_STAINED_GLASS;
-				break;
+				case PURPLE:
+					material = Material.PURPLE_STAINED_GLASS;
+					break;
 
-			case RED:
-				material = Material.RED_STAINED_GLASS;
-				break;
+				case RED:
+					material = Material.RED_STAINED_GLASS;
+					break;
 
-			case YELLOW:
-				material = Material.YELLOW_STAINED_GLASS;
-				break;
+				case YELLOW:
+					material = Material.YELLOW_STAINED_GLASS;
+					break;
 
-			case WHITE:
-				material = Material.WHITE_STAINED_GLASS;
-				break;
+				case WHITE:
+					material = Material.WHITE_STAINED_GLASS;
+					break;
 
-			default:
-				material = Material.AIR;
-				break;
+				default:
+					material = Material.AIR;
+					break;
 			}
 		} else if (type == ColoredBlockType.GLASS_PANE) {
 			switch (color) {
-			case BLACK:
-				material = Material.BLACK_STAINED_GLASS_PANE;
-				break;
+				case BLACK:
+					material = Material.BLACK_STAINED_GLASS_PANE;
+					break;
 
-			case BLUE:
-				material = Material.BLUE_STAINED_GLASS_PANE;
-				break;
+				case BLUE:
+					material = Material.BLUE_STAINED_GLASS_PANE;
+					break;
 
-			case BROWN:
-				material = Material.BROWN_STAINED_GLASS_PANE;
-				break;
+				case BROWN:
+					material = Material.BROWN_STAINED_GLASS_PANE;
+					break;
 
-			case CYAN:
-				material = Material.CYAN_STAINED_GLASS_PANE;
-				break;
+				case CYAN:
+					material = Material.CYAN_STAINED_GLASS_PANE;
+					break;
 
-			case GRAY:
-				material = Material.LIGHT_GRAY_STAINED_GLASS_PANE;
-				break;
+				case GRAY:
+					material = Material.LIGHT_GRAY_STAINED_GLASS_PANE;
+					break;
 
-			case GREEN:
-				material = Material.GREEN_STAINED_GLASS_PANE;
-				break;
+				case GREEN:
+					material = Material.GREEN_STAINED_GLASS_PANE;
+					break;
 
-			case LIGHT_BLUE:
-				material = Material.LIGHT_BLUE_STAINED_GLASS_PANE;
-				break;
+				case LIGHT_BLUE:
+					material = Material.LIGHT_BLUE_STAINED_GLASS_PANE;
+					break;
 
-			case LIGHT_GRAY:
-				material = Material.LIGHT_GRAY_STAINED_GLASS_PANE;
-				break;
+				case LIGHT_GRAY:
+					material = Material.LIGHT_GRAY_STAINED_GLASS_PANE;
+					break;
 
-			case LIME:
-				material = Material.LIME_STAINED_GLASS_PANE;
-				break;
+				case LIME:
+					material = Material.LIME_STAINED_GLASS_PANE;
+					break;
 
-			case MAGENTA:
-				material = Material.MAGENTA_STAINED_GLASS_PANE;
-				break;
+				case MAGENTA:
+					material = Material.MAGENTA_STAINED_GLASS_PANE;
+					break;
 
-			case ORANGE:
-				material = Material.ORANGE_STAINED_GLASS_PANE;
-				break;
+				case ORANGE:
+					material = Material.ORANGE_STAINED_GLASS_PANE;
+					break;
 
-			case PINK:
-				material = Material.PINK_STAINED_GLASS_PANE;
-				break;
+				case PINK:
+					material = Material.PINK_STAINED_GLASS_PANE;
+					break;
 
-			case PURPLE:
-				material = Material.PURPLE_STAINED_GLASS_PANE;
-				break;
+				case PURPLE:
+					material = Material.PURPLE_STAINED_GLASS_PANE;
+					break;
 
-			case RED:
-				material = Material.RED_STAINED_GLASS_PANE;
-				break;
+				case RED:
+					material = Material.RED_STAINED_GLASS_PANE;
+					break;
 
-			case YELLOW:
-				material = Material.YELLOW_STAINED_GLASS_PANE;
-				break;
+				case YELLOW:
+					material = Material.YELLOW_STAINED_GLASS_PANE;
+					break;
 
-			case WHITE:
-				material = Material.WHITE_STAINED_GLASS_PANE;
+				case WHITE:
+					material = Material.WHITE_STAINED_GLASS_PANE;
 
-			default:
-				material = Material.AIR;
-				break;
+				default:
+					material = Material.AIR;
+					break;
 			}
 		} else if (type == ColoredBlockType.WOOL) {
 			switch (color) {
-			case BLACK:
-				material = Material.BLACK_WOOL;
-				break;
+				case BLACK:
+					material = Material.BLACK_WOOL;
+					break;
 
-			case BLUE:
-				material = Material.BLUE_WOOL;
-				break;
+				case BLUE:
+					material = Material.BLUE_WOOL;
+					break;
 
-			case BROWN:
-				material = Material.BROWN_WOOL;
-				break;
+				case BROWN:
+					material = Material.BROWN_WOOL;
+					break;
 
-			case CYAN:
-				material = Material.CYAN_WOOL;
-				break;
+				case CYAN:
+					material = Material.CYAN_WOOL;
+					break;
 
-			case GRAY:
-				material = Material.LIGHT_GRAY_WOOL;
-				break;
+				case GRAY:
+					material = Material.LIGHT_GRAY_WOOL;
+					break;
 
-			case GREEN:
-				material = Material.GREEN_WOOL;
-				break;
+				case GREEN:
+					material = Material.GREEN_WOOL;
+					break;
 
-			case LIGHT_BLUE:
-				material = Material.LIGHT_BLUE_WOOL;
-				break;
+				case LIGHT_BLUE:
+					material = Material.LIGHT_BLUE_WOOL;
+					break;
 
-			case LIGHT_GRAY:
-				material = Material.LIGHT_GRAY_WOOL;
-				break;
+				case LIGHT_GRAY:
+					material = Material.LIGHT_GRAY_WOOL;
+					break;
 
-			case LIME:
-				material = Material.LIME_WOOL;
-				break;
+				case LIME:
+					material = Material.LIME_WOOL;
+					break;
 
-			case MAGENTA:
-				material = Material.MAGENTA_WOOL;
-				break;
+				case MAGENTA:
+					material = Material.MAGENTA_WOOL;
+					break;
 
-			case ORANGE:
-				material = Material.ORANGE_WOOL;
-				break;
+				case ORANGE:
+					material = Material.ORANGE_WOOL;
+					break;
 
-			case PINK:
-				material = Material.PINK_WOOL;
-				break;
+				case PINK:
+					material = Material.PINK_WOOL;
+					break;
 
-			case PURPLE:
-				material = Material.PURPLE_WOOL;
-				break;
+				case PURPLE:
+					material = Material.PURPLE_WOOL;
+					break;
 
-			case RED:
-				material = Material.RED_WOOL;
-				break;
+				case RED:
+					material = Material.RED_WOOL;
+					break;
 
-			case YELLOW:
-				material = Material.YELLOW_WOOL;
-				break;
+				case YELLOW:
+					material = Material.YELLOW_WOOL;
+					break;
 
-			case WHITE:
-				material = Material.WHITE_WOOL;
-				break;
+				case WHITE:
+					material = Material.WHITE_WOOL;
+					break;
 
-			default:
-				material = Material.AIR;
-				break;
+				default:
+					material = Material.AIR;
+					break;
 			}
 		} else if (type == ColoredBlockType.CLAY) {
 			switch (color) {
-			case BLACK:
-				material = Material.BLACK_TERRACOTTA;
-				break;
+				case BLACK:
+					material = Material.BLACK_TERRACOTTA;
+					break;
 
-			case BLUE:
-				material = Material.BLUE_TERRACOTTA;
-				break;
+				case BLUE:
+					material = Material.BLUE_TERRACOTTA;
+					break;
 
-			case BROWN:
-				material = Material.BROWN_TERRACOTTA;
-				break;
+				case BROWN:
+					material = Material.BROWN_TERRACOTTA;
+					break;
 
-			case CYAN:
-				material = Material.CYAN_TERRACOTTA;
-				break;
+				case CYAN:
+					material = Material.CYAN_TERRACOTTA;
+					break;
 
-			case GRAY:
-				material = Material.LIGHT_GRAY_TERRACOTTA;
-				break;
+				case GRAY:
+					material = Material.LIGHT_GRAY_TERRACOTTA;
+					break;
 
-			case GREEN:
-				material = Material.GREEN_TERRACOTTA;
-				break;
+				case GREEN:
+					material = Material.GREEN_TERRACOTTA;
+					break;
 
-			case LIGHT_BLUE:
-				material = Material.LIGHT_BLUE_TERRACOTTA;
-				break;
+				case LIGHT_BLUE:
+					material = Material.LIGHT_BLUE_TERRACOTTA;
+					break;
 
-			case LIGHT_GRAY:
-				material = Material.LIGHT_GRAY_TERRACOTTA;
-				break;
+				case LIGHT_GRAY:
+					material = Material.LIGHT_GRAY_TERRACOTTA;
+					break;
 
-			case LIME:
-				material = Material.LIME_TERRACOTTA;
-				break;
+				case LIME:
+					material = Material.LIME_TERRACOTTA;
+					break;
 
-			case MAGENTA:
-				material = Material.MAGENTA_TERRACOTTA;
-				break;
+				case MAGENTA:
+					material = Material.MAGENTA_TERRACOTTA;
+					break;
 
-			case ORANGE:
-				material = Material.ORANGE_TERRACOTTA;
-				break;
+				case ORANGE:
+					material = Material.ORANGE_TERRACOTTA;
+					break;
 
-			case PINK:
-				material = Material.PINK_TERRACOTTA;
-				break;
+				case PINK:
+					material = Material.PINK_TERRACOTTA;
+					break;
 
-			case PURPLE:
-				material = Material.PURPLE_TERRACOTTA;
-				break;
+				case PURPLE:
+					material = Material.PURPLE_TERRACOTTA;
+					break;
 
-			case RED:
-				material = Material.RED_TERRACOTTA;
-				break;
+				case RED:
+					material = Material.RED_TERRACOTTA;
+					break;
 
-			case YELLOW:
-				material = Material.YELLOW_TERRACOTTA;
-				break;
+				case YELLOW:
+					material = Material.YELLOW_TERRACOTTA;
+					break;
 
-			case WHITE:
-				material = Material.WHITE_TERRACOTTA;
-				break;
+				case WHITE:
+					material = Material.WHITE_TERRACOTTA;
+					break;
 
-			default:
-				material = Material.AIR;
-				break;
+				default:
+					material = Material.AIR;
+					break;
 			}
 		} else {
 			material = Material.AIR;
@@ -556,58 +525,58 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	@Override
 	public Sound getSound(VersionIndependentSound sound) {
 		switch (sound) {
-		case NOTE_PLING:
-			return Sound.BLOCK_NOTE_BLOCK_PLING;
+			case NOTE_PLING:
+				return Sound.BLOCK_NOTE_BLOCK_PLING;
 
-		case NOTE_HAT:
-			return Sound.BLOCK_NOTE_BLOCK_HAT;
+			case NOTE_HAT:
+				return Sound.BLOCK_NOTE_BLOCK_HAT;
 
-		case WITHER_DEATH:
-			return Sound.ENTITY_WITHER_DEATH;
+			case WITHER_DEATH:
+				return Sound.ENTITY_WITHER_DEATH;
 
-		case WITHER_HURT:
-			return Sound.ENTITY_WITHER_HURT;
+			case WITHER_HURT:
+				return Sound.ENTITY_WITHER_HURT;
 
-		case ITEM_BREAK:
-			return Sound.ENTITY_ITEM_BREAK;
-			
-		case ITEM_PICKUP:
-			return Sound.ENTITY_ITEM_PICKUP;
+			case ITEM_BREAK:
+				return Sound.ENTITY_ITEM_BREAK;
 
-		case ORB_PICKUP:
-			return Sound.ENTITY_EXPERIENCE_ORB_PICKUP;
+			case ITEM_PICKUP:
+				return Sound.ENTITY_ITEM_PICKUP;
 
-		case ANVIL_LAND:
-			return Sound.BLOCK_ANVIL_LAND;
-			
-		case EXPLODE:
-			return Sound.ENTITY_GENERIC_EXPLODE;
+			case ORB_PICKUP:
+				return Sound.ENTITY_EXPERIENCE_ORB_PICKUP;
 
-		case LEVEL_UP:
-			return Sound.ENTITY_PLAYER_LEVELUP;
-			
-		case WITHER_SHOOT:
-			return Sound.ENTITY_WITHER_SHOOT;
+			case ANVIL_LAND:
+				return Sound.BLOCK_ANVIL_LAND;
 
-		case EAT:
-			return Sound.ENTITY_GENERIC_EAT;
+			case EXPLODE:
+				return Sound.ENTITY_GENERIC_EXPLODE;
 
-		case ANVIL_BREAK:
-			return Sound.BLOCK_ANVIL_BREAK;
-			
-		case FIZZ:
-			return Sound.BLOCK_FIRE_EXTINGUISH;
-			
-		case ENDERMAN_TELEPORT:
-			return Sound.ENTITY_ENDERMAN_TELEPORT;
+			case LEVEL_UP:
+				return Sound.ENTITY_PLAYER_LEVELUP;
 
-		case CLICK:
-			return Sound.BLOCK_LEVER_CLICK;
-			
-		default:
-			setLastError(VersionIndependenceLayerError.MISSING_SOUND);
-			AbstractionLogger.getLogger().error("VersionIndependentUtils", "VersionIndependantSound " + sound.name() + " is not defined in this version. Please add it to " + this.getClass().getName());
-			return null;
+			case WITHER_SHOOT:
+				return Sound.ENTITY_WITHER_SHOOT;
+
+			case EAT:
+				return Sound.ENTITY_GENERIC_EAT;
+
+			case ANVIL_BREAK:
+				return Sound.BLOCK_ANVIL_BREAK;
+
+			case FIZZ:
+				return Sound.BLOCK_FIRE_EXTINGUISH;
+
+			case ENDERMAN_TELEPORT:
+				return Sound.ENTITY_ENDERMAN_TELEPORT;
+
+			case CLICK:
+				return Sound.BLOCK_LEVER_CLICK;
+
+			default:
+				setLastError(VersionIndependenceLayerError.MISSING_SOUND);
+				AbstractionLogger.getLogger().error("VersionIndependentUtils", "VersionIndependantSound " + sound.name() + " is not defined in this version. Please add it to " + this.getClass().getName());
+				return null;
 		}
 	}
 
@@ -651,82 +620,82 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	@Override
 	public Material getMaterial(VersionIndependentMaterial material) {
 		switch (material) {
-		case FILLED_MAP:
-			return Material.FILLED_MAP;
+			case FILLED_MAP:
+				return Material.FILLED_MAP;
 
-		case END_STONE:
-			return Material.END_STONE;
+			case END_STONE:
+				return Material.END_STONE;
 
-		case WORKBENCH:
-			return Material.CRAFTING_TABLE;
+			case WORKBENCH:
+				return Material.CRAFTING_TABLE;
 
-		case OAK_BOAT:
-			return Material.OAK_BOAT;
+			case OAK_BOAT:
+				return Material.OAK_BOAT;
 
-		case DIAMOND_SHOVEL:
-			return Material.DIAMOND_SHOVEL;
-			
-		case SNOWBALL:
-			return Material.SNOWBALL;
-			
-		case FARMLAND:
-			return Material.FARMLAND;
-			
-		case GOLDEN_AXE:
-			return Material.GOLDEN_AXE;
-			
-		case GOLDEN_HOE:
-			return Material.GOLDEN_HOE;
-			
-		case GOLDEN_PICKAXE:
-			return Material.GOLDEN_PICKAXE;
-			
-		case GOLDEN_SHOVEL:
-			return Material.GOLDEN_SHOVEL;
-			
-		case GOLDEN_SWORD:
-			return Material.GOLDEN_SWORD;
-			
-		case WOODEN_AXE:
-			return Material.WOODEN_AXE;
-			
-		case WOODEN_HOE:
-			return Material.WOODEN_HOE;
-			
-		case WOODEN_PICKAXE:
-			return Material.WOODEN_PICKAXE;
-			
-		case WOODEN_SHOVEL:
-			return Material.WOODEN_SHOVEL;
-			
-		case WOODEN_SWORD:
-			return Material.WOODEN_SWORD;
-			
-		case WATCH:
-			return Material.CLOCK;
-			
-		case GOLD_HELMET:
-			return Material.GOLDEN_HELMET;
-			
-		case GOLD_CHESTPLATE:
-			return Material.GOLDEN_CHESTPLATE;
-			
-		case GOLD_LEGGINGS:
-			return Material.GOLDEN_LEGGINGS;
-			
-		case GOLD_BOOTS:
-			return Material.GOLDEN_BOOTS;
-			
-		case GRILLED_PORK:
-			return Material.COOKED_PORKCHOP;
+			case DIAMOND_SHOVEL:
+				return Material.DIAMOND_SHOVEL;
 
-		case EXP_BOTTLE:
-			return Material.EXPERIENCE_BOTTLE;
-			
-		default:
-			setLastError(VersionIndependenceLayerError.MISSING_MATERIAL);
-			AbstractionLogger.getLogger().warning("VersionIndependentUtils", "Unknown version Independent material: " + material.name());
-			return null;
+			case SNOWBALL:
+				return Material.SNOWBALL;
+
+			case FARMLAND:
+				return Material.FARMLAND;
+
+			case GOLDEN_AXE:
+				return Material.GOLDEN_AXE;
+
+			case GOLDEN_HOE:
+				return Material.GOLDEN_HOE;
+
+			case GOLDEN_PICKAXE:
+				return Material.GOLDEN_PICKAXE;
+
+			case GOLDEN_SHOVEL:
+				return Material.GOLDEN_SHOVEL;
+
+			case GOLDEN_SWORD:
+				return Material.GOLDEN_SWORD;
+
+			case WOODEN_AXE:
+				return Material.WOODEN_AXE;
+
+			case WOODEN_HOE:
+				return Material.WOODEN_HOE;
+
+			case WOODEN_PICKAXE:
+				return Material.WOODEN_PICKAXE;
+
+			case WOODEN_SHOVEL:
+				return Material.WOODEN_SHOVEL;
+
+			case WOODEN_SWORD:
+				return Material.WOODEN_SWORD;
+
+			case WATCH:
+				return Material.CLOCK;
+
+			case GOLD_HELMET:
+				return Material.GOLDEN_HELMET;
+
+			case GOLD_CHESTPLATE:
+				return Material.GOLDEN_CHESTPLATE;
+
+			case GOLD_LEGGINGS:
+				return Material.GOLDEN_LEGGINGS;
+
+			case GOLD_BOOTS:
+				return Material.GOLDEN_BOOTS;
+
+			case GRILLED_PORK:
+				return Material.COOKED_PORKCHOP;
+
+			case EXP_BOTTLE:
+				return Material.EXPERIENCE_BOTTLE;
+
+			default:
+				setLastError(VersionIndependenceLayerError.MISSING_MATERIAL);
+				AbstractionLogger.getLogger().warning("VersionIndependentUtils", "Unknown version Independent material: " + material.name());
+				return null;
 		}
 	}
 
@@ -752,17 +721,17 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 
 		return false;
 	}
-	
+
 	@Override
 	public void sendActionBarMessage(Player player, String message) {
-		player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));		
+		player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
 	}
 
 	@Override
 	public int getMinY() {
 		return -64;
 	}
-	
+
 	@Override
 	public ItemMeta setUnbreakable(ItemMeta meta, boolean unbreakable) {
 		meta.setUnbreakable(unbreakable);
@@ -773,7 +742,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	public void setCreatureItemInMainHand(Creature creature, ItemStack item) {
 		creature.getEquipment().setItemInMainHand(item);
 	}
-	
+
 	@Override
 	public float getPlayerBodyRotation(Player player) {
 		CraftPlayer craftPlayer = (CraftPlayer) player;
@@ -790,7 +759,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	public void setGameRule(World world, String rule, String value) {
 		world.setGameRuleValue(rule, value);
 	}
-	
+
 	@Override
 	public boolean isInteractEventMainHand(PlayerInteractEvent e) {
 		return e.getHand() == EquipmentSlot.HAND;
@@ -1193,12 +1162,6 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	public ShapelessRecipe createShapelessRecipe(ItemStack result, Plugin owner, String key) {
 		return new ShapelessRecipe(new NamespacedKey(owner, key.toLowerCase()), result);
 	}
-	
-	@Override
-	public Color bungeecordChatColorToJavaColor(ChatColor color) {
-		return DefaultBungeecordColorMapper.getColorOfChatcolor(color);
-	}
-
 	@Override
 	public void displayTotem(Player player) {
 		PacketPlayOutEntityStatus packet = new PacketPlayOutEntityStatus(((CraftPlayer) player).getHandle(), (byte) 35);
@@ -1217,5 +1180,15 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		PacketPlayOutEntityStatus packet = new PacketPlayOutEntityStatus(((CraftPlayer) player).getHandle(), (byte) 35);
 		((CraftPlayer) player).getHandle().b.a(packet);
 		player.getInventory().setItemInMainHand(hand);
+	}
+
+	@Override
+	public void setMarker(ArmorStand armorStand, boolean b) {
+		armorStand.setMarker(b);
+	}
+
+	@Override
+	public boolean isMarker(ArmorStand armorStand) {
+		return armorStand.isMarker();
 	}
 }
