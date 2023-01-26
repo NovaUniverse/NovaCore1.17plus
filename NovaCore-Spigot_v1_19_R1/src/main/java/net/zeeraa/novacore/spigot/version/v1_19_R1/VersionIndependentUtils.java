@@ -43,6 +43,7 @@ import org.bukkit.craftbukkit.v1_19_R1.entity.CraftFallingBlock;
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_19_R1.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_19_R1.util.CraftMagicNumbers;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -242,7 +243,6 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		if (color == DyeColor.WHITE && type == ColoredBlockType.GLASS_PANE) {
 			return Material.WHITE_STAINED_GLASS_PANE;
 		}
-
 
 		Material material;
 
@@ -1025,7 +1025,6 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		return finalBuild.toString();
 	}
 
-
 	@Override
 	public PacketManager getPacketManager() {
 		if (packetManager == null)
@@ -1092,6 +1091,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 			Log.warn("NovaCore", "Packet sent isnt instance of " + Packet.class.getCanonicalName());
 		}
 	}
+
 	@Override
 	public void addAttribute(ItemStack item, ItemMeta meta, AttributeInfo attributeInfo) {
 		if (attributeInfo == null) {
@@ -1124,6 +1124,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 			}
 		}
 	}
+
 	@Override
 	public Block getTargetBlockExact(LivingEntity entity, int distance, List<Material> ignore) {
 		RayTraceResult returned;
@@ -1146,10 +1147,11 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		ignore.add(Material.WATER);
 		return getTargetBlockExact(entity, 5, ignore);
 	}
+
 	@Override
 	public FallingBlock spawnFallingBlock(Location location, Material material, byte data, Consumer<FallingBlock> consumer) {
 		try {
-			EntityFallingBlock fb = EntityFallingBlock.fall(((CraftWorld)location.getWorld()).getHandle(), new BlockPosition(location.getX(), location.getY(), location.getZ()), CraftMagicNumbers.getBlock(material).m(), CreatureSpawnEvent.SpawnReason.CUSTOM);
+			EntityFallingBlock fb = EntityFallingBlock.fall(((CraftWorld) location.getWorld()).getHandle(), new BlockPosition(location.getX(), location.getY(), location.getZ()), CraftMagicNumbers.getBlock(material).m(), CreatureSpawnEvent.SpawnReason.CUSTOM);
 			if (fb.getBukkitEntity() instanceof CraftFallingBlock) {
 				CraftFallingBlock cfb = (CraftFallingBlock) fb.getBukkitEntity();
 				consumer.accept(cfb);
@@ -1163,6 +1165,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		}
 		throw new IllegalStateException("[VersionIndependentUtils] An unexpected error occurred");
 	}
+
 	@Override
 	public void setPotionEffect(ItemStack item, ItemMeta meta, PotionEffect effect, boolean color) {
 		if (meta instanceof PotionMeta) {
@@ -1196,7 +1199,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	public ShapelessRecipe createShapelessRecipe(ItemStack result, Plugin owner, String key) {
 		return new ShapelessRecipe(new NamespacedKey(owner, key.toLowerCase()), result);
 	}
-	
+
 	@Override
 	public Color bungeecordChatColorToJavaColor(ChatColor color) {
 		return DefaultBungeecordColorMapper.getColorOfChatcolor(color);
@@ -1220,5 +1223,15 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		PacketPlayOutEntityStatus packet = new PacketPlayOutEntityStatus(((CraftPlayer) player).getHandle(), (byte) 35);
 		((CraftPlayer) player).getHandle().b.a(packet);
 		player.getInventory().setItemInMainHand(hand);
+	}
+
+	@Override
+	public void setMarker(ArmorStand stand, boolean marker) {
+		stand.setMarker(marker);
+	}
+
+	@Override
+	public boolean isMarker(ArmorStand stand) {
+		return stand.isMarker();
 	}
 }
