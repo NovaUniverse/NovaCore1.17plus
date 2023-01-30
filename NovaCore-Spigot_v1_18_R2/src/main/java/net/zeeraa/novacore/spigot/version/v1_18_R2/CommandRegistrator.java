@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.craftbukkit.v1_18_R2.CraftServer;
+import org.bukkit.plugin.Plugin;
 
 /**
  * Based on this:
@@ -14,27 +15,32 @@ import org.bukkit.craftbukkit.v1_18_R2.CraftServer;
  * @author Zeeraa
  */
 public class CommandRegistrator implements net.zeeraa.novacore.spigot.abstraction.CommandRegistrator {
-	private CommandMap cmap;
+	private CommandMap cmap = null;
 
 	public CommandRegistrator() {
 		try {
-			if (Bukkit.getServer() instanceof CraftServer) {
-				Field f = CraftServer.class.getDeclaredField("commandMap");
-				f.setAccessible(true);
-				cmap = (CommandMap) f.get(Bukkit.getServer());
-			}
+			Field f = CraftServer.class.getDeclaredField("commandMap");
+			f.setAccessible(true);
+			cmap = (CommandMap) f.get(Bukkit.getServer());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void registerCommand(Command command) {
-		cmap.register("", command);
+	public void registerCommand(Plugin plugin, Command command) {
+		cmap.register(plugin.getName(), command);
 	}
 
 	@Override
 	public CommandMap getCommandMap() {
 		return cmap;
+	}
+
+	@Override
+	public boolean syncCommands() {
+		CraftServer server = (CraftServer) Bukkit.getServer();
+		server.syncCommands();
+		return true;
 	}
 }
