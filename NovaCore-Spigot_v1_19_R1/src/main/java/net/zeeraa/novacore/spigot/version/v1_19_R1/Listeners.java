@@ -26,7 +26,7 @@ public class Listeners extends net.zeeraa.novacore.spigot.abstraction.Listeners 
 			event.setCancelled(e.isCancelled());
 
 			Bukkit.getServer().getPluginManager().callEvent(event);
-			
+
 			e.setCancelled(event.isCancelled());
 		}
 	}

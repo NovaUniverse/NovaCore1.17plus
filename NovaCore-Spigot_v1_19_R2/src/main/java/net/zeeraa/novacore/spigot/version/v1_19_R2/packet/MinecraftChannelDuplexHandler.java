@@ -26,7 +26,6 @@ public class MinecraftChannelDuplexHandler extends net.zeeraa.novacore.spigot.ab
 	}
 
 	public boolean readPacket(Player player, Object packet) throws NoSuchFieldException, IllegalAccessException {
-		List<Player> playersDigging = VersionIndependentUtils.get().getPacketManager().getPlayersDigging();
 		List<Event> events = new ArrayList<>();
 		if (packet.getClass().equals(PacketPlayInSettings.class)) {
 			PacketPlayInSettings settings = (PacketPlayInSettings) packet;
@@ -48,6 +47,7 @@ public class MinecraftChannelDuplexHandler extends net.zeeraa.novacore.spigot.ab
 			events.add(new SpectatorTeleportEvent(player, Bukkit.getPlayer(id)));
 
 		} else if (packet.getClass().equals(PacketPlayInBlockDig.class)) {
+			List<Player> playersDigging = VersionIndependentUtils.get().getPacketManager().getPlayersDigging();
 			PacketPlayInBlockDig action = (PacketPlayInBlockDig) packet;
 
 			switch (action.d()) {
