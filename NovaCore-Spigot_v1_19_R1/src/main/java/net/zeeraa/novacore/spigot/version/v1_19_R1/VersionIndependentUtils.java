@@ -732,6 +732,8 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 
 		case WOOL:
 			return Material.WHITE_WOOL;
+		case FIREBALL:
+			return Material.FIRE_CHARGE;
 
 		default:
 			setLastError(VersionIndependenceLayerError.MISSING_MATERIAL);
