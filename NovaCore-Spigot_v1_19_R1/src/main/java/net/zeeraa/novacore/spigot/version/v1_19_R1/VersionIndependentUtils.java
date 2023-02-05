@@ -10,6 +10,8 @@ import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityStatus;
 import net.minecraft.world.entity.item.EntityFallingBlock;
+import net.minecraft.world.phys.AxisAlignedBB;
+import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17;
 import net.zeeraa.novacore.commons.log.Log;
 import net.zeeraa.novacore.commons.utils.ListUtils;
 import net.zeeraa.novacore.commons.utils.LoopableIterator;
@@ -35,10 +37,17 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.World;
+import net.zeeraa.novacore.spigot.abstraction.commons.EntityBoundingBox;
+import net.zeeraa.novacore.spigot.abstraction.enums.*;
+import net.zeeraa.novacore.spigot.abstraction.log.AbstractionLogger;
+import net.zeeraa.novacore.spigot.abstraction.manager.CustomSpectatorManager;
+import net.zeeraa.novacore.spigot.abstraction.packet.PacketManager;
+import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_19_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftFallingBlock;
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_19_R1.inventory.CraftItemStack;
@@ -78,14 +87,13 @@ import net.minecraft.server.MinecraftServer;
 import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.RayTraceResult;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
+import java.util.*;
+import java.lang.reflect.Field;
+import java.text.DecimalFormat;
 import java.util.function.Consumer;
 
 public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstraction.VersionIndependentUtils {
@@ -189,28 +197,28 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 
 		/*
 		 * DamageSource source;
-		 * 
+		 *
 		 * switch (reason) { case FALL: source = DamageSource.FALL;
-		 * 
+		 *
 		 * case FALLING_BLOCK: source = DamageSource.FALLING_BLOCK; break; case
 		 * OUT_OF_WORLD: source = DamageSource.OUT_OF_WORLD; break;
-		 * 
+		 *
 		 * case BURN: source = DamageSource.BURN; break;
-		 * 
+		 *
 		 * case LIGHTNING: source = DamageSource.LIGHTNING; break;
-		 * 
+		 *
 		 * case MAGIC: source = DamageSource.MAGIC; break;
-		 * 
+		 *
 		 * case DROWN: source = DamageSource.DROWN; break;
-		 * 
+		 *
 		 * case STARVE: source = DamageSource.STARVE; break;
-		 * 
+		 *
 		 * case LAVA: source = DamageSource.LAVA; break;
-		 * 
+		 *
 		 * case GENERIC: source = DamageSource.GENERIC; break;
-		 * 
+		 *
 		 * default: source = DamageSource.GENERIC; break; }
-		 * 
+		 *
 		 * ((CraftPlayer) player).getHandle().damageEntity(source, damage);
 		 */
 	}
@@ -1233,5 +1241,53 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	@Override
 	public boolean isMarker(ArmorStand stand) {
 		return stand.isMarker();
+	}
+
+	@Override
+	public void setCustomSpectator(Player player, boolean value, Collection<? extends Player> players) {
+		if (value) {
+			if (!CustomSpectatorManager.isSpectator(player)) {
+				player.setAllowFlight(true);
+				player.setFlying(true);
+				player.setCollidable(false);
+				player.setSilent(true);
+				player.setHealth(20);
+				player.setFoodLevel(20);
+				player.getEquipment().clear();
+				player.getInventory().clear();
+				player.getActivePotionEffects().clear();
+				player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false));
+				CustomSpectatorManager.getSpectators().add(player);
+				for (Player list : players) {
+					list.hidePlayer(Bukkit.getPluginManager().getPlugin("NovaCore"), player);
+				}
+			}
+		} else {
+			if (CustomSpectatorManager.isSpectator(player)) {
+				player.setFlying(false);
+				player.setAllowFlight(false);
+				player.removePotionEffect(PotionEffectType.INVISIBILITY);
+				player.setCollidable(true);
+				player.setSilent(false);
+				CustomSpectatorManager.getSpectators().remove(player);
+				for (Player list : players) {
+					list.showPlayer(Bukkit.getPluginManager().getPlugin("NovaCore"), player);
+				}
+			}
+		}
+	}
+
+	@Override
+	public EntityBoundingBox getEntityBoundingBox(Entity entity) {
+
+		net.minecraft.world.entity.Entity nmsEntity = ((CraftEntity) entity).getHandle();
+		AxisAlignedBB aabb = nmsEntity.cz();
+
+		DecimalFormat df = new DecimalFormat("0.00");
+		double currentWidth = aabb.d - entity.getLocation().getX();
+		double currentHeight = aabb.e - entity.getLocation().getY();
+		float width = Float.parseFloat(df.format(currentWidth).replace(',','.')) * 2;
+		float height = Float.parseFloat(df.format(currentHeight).replace(',','.'));
+		return new EntityBoundingBox(height, width);
 	}
 }
