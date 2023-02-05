@@ -49,7 +49,7 @@ public class CommandRegistrator implements net.zeeraa.novacore.spigot.abstractio
 
 	@Override
 	public Map<String, Command> tryGetKnownCommandsFromSimpleCommandMap(SimpleCommandMap commandMap) {
-		if(commandMap instanceof CraftCommandMap) {
+		if (commandMap instanceof CraftCommandMap) {
 			CraftCommandMap craftCommandMap = (CraftCommandMap) commandMap;
 			return craftCommandMap.getKnownCommands();
 		}

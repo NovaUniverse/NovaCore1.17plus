@@ -38,11 +38,9 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import net.zeeraa.novacore.spigot.abstraction.commons.EntityBoundingBox;
-import net.zeeraa.novacore.spigot.abstraction.enums.*;
 import net.zeeraa.novacore.spigot.abstraction.log.AbstractionLogger;
 import net.zeeraa.novacore.spigot.abstraction.manager.CustomSpectatorManager;
 import net.zeeraa.novacore.spigot.abstraction.packet.PacketManager;
-import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Block;
@@ -78,12 +76,9 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 
-import net.zeeraa.novacore.spigot.abstraction.log.AbstractionLogger;
-import net.zeeraa.novacore.spigot.abstraction.packet.PacketManager;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.server.MinecraftServer;
-import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17;
 import org.bukkit.craftbukkit.v1_18_R2.entity.CraftPlayer;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
@@ -91,9 +86,13 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.RayTraceResult;
 
 import java.awt.Color;
-import java.util.*;
-import java.lang.reflect.Field;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstraction.VersionIndependentUtils {
@@ -1285,8 +1284,8 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		DecimalFormat df = new DecimalFormat("0.00");
 		double currentWidth = aabb.d - entity.getLocation().getX();
 		double currentHeight = aabb.e - entity.getLocation().getY();
-		float width = Float.parseFloat(df.format(currentWidth).replace(',','.')) * 2;
-		float height = Float.parseFloat(df.format(currentHeight).replace(',','.'));
+		float width = Float.parseFloat(df.format(currentWidth).replace(',', '.')) * 2;
+		float height = Float.parseFloat(df.format(currentHeight).replace(',', '.'));
 		return new EntityBoundingBox(height, width);
 	}
 }
