@@ -1,6 +1,10 @@
 package net.zeeraa.novacore.spigot.version.v1_19_R2.packet;
 
-import net.minecraft.network.protocol.game.*;
+import net.minecraft.network.protocol.game.PacketPlayInArmAnimation;
+import net.minecraft.network.protocol.game.PacketPlayInBlockDig;
+import net.minecraft.network.protocol.game.PacketPlayInSettings;
+import net.minecraft.network.protocol.game.PacketPlayInSpectate;
+import net.minecraft.network.protocol.game.PacketPlayOutNamedSoundEffect;
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.sounds.SoundEffect;
 import net.zeeraa.novacore.spigot.abstraction.VersionIndependentUtils;
@@ -17,7 +21,10 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 public class MinecraftChannelDuplexHandler extends net.zeeraa.novacore.spigot.abstraction.packet.MinecraftChannelDuplexHandler {
 
