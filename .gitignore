@@ -7,3 +7,12 @@ javadoc/
 .idea
 
 dependency-reduced-pom.xml
+.settings/org.eclipse.m2e.core.prefs
+NovaCore-Spigot_v1_18_R1/.classpath
+NovaCore-Spigot_v1_18_R1/.settings/org.eclipse.jdt.core.prefs
+NovaCore-Spigot_v1_18_R2/.classpath
+NovaCore-Spigot_v1_18_R2/.settings/org.eclipse.jdt.core.prefs
+NovaCore-Spigot_v1_19_R1/.classpath
+NovaCore-Spigot_v1_19_R1/.settings/org.eclipse.jdt.core.prefs
+NovaCore-Spigot_v1_19_R2/.classpath
+NovaCore-Spigot_v1_19_R2/.settings/org.eclipse.jdt.core.prefs
