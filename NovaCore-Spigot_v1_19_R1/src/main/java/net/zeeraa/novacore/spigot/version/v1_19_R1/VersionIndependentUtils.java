@@ -9,7 +9,9 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityStatus;
+import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.item.EntityFallingBlock;
+import net.minecraft.world.entity.item.EntityTNTPrimed;
 import net.minecraft.world.phys.AxisAlignedBB;
 import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17;
 import net.zeeraa.novacore.commons.log.Log;
@@ -47,7 +49,9 @@ import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftFallingBlock;
+import org.bukkit.craftbukkit.v1_19_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_19_R1.entity.CraftTNTPrimed;
 import org.bukkit.craftbukkit.v1_19_R1.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_19_R1.util.CraftMagicNumbers;
 import org.bukkit.entity.ArmorStand;
@@ -57,6 +61,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
@@ -1293,5 +1298,19 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		float width = Float.parseFloat(df.format(currentWidth).replace(',','.')) * 2;
 		float height = Float.parseFloat(df.format(currentHeight).replace(',','.'));
 		return new EntityBoundingBox(height, width);
+	}
+	@Override
+	public void setSource(TNTPrimed tnt, LivingEntity source) {
+		EntityTNTPrimed etp = ((CraftTNTPrimed) tnt).getHandle();
+		EntityLiving el = ((CraftLivingEntity) source).getHandle();
+		try {
+			Field f = etp.getClass().getDeclaredField("d");
+			f.setAccessible(true);
+			f.set(etp, el);
+		} catch (Exception e) {
+			Log.error("VersionIndependentUtils", "Could not set TNT's source. Entity UUID: " + tnt.getUniqueId() + " Entity ID: " + tnt.getEntityId());
+			e.printStackTrace();
+		}
+
 	}
 }
