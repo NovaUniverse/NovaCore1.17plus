@@ -619,6 +619,9 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 
 	@Override
 	public void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+		if(title.length() == 0) {
+			title = " ";
+		}
 		player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
 	}
 
