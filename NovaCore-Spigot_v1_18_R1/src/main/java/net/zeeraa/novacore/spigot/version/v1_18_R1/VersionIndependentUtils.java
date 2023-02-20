@@ -1311,7 +1311,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	}
 
 	@Override
-	public void registerCustomEntity(Object entity, String name) {
+	public void registerCustomEntity(Class<?> entity, String name) {
 		// there is no need to register custom entities on 1.14+
 	}
 	@Override
