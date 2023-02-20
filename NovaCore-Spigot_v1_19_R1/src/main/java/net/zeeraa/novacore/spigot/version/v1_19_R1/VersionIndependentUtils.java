@@ -1321,4 +1321,19 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	public ItemStack getColoredBannerItemStack(DyeColor color) {
 		return SharedBannerItemStackCreator.getColoredBannerItemStack(color);
 	}
+
+	@Override
+	public void registerCustomEntity(Object entity, String name) {
+		// there is no need to register custom entities on 1.14+
+	}
+	@Override
+	public void spawnCustomEntity(Object entity, Location location) {
+		if (entity instanceof net.minecraft.world.entity.Entity) {
+			net.minecraft.world.entity.Entity nmsEntity = (net.minecraft.world.entity.Entity) entity;
+			nmsEntity.a(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+			((CraftWorld)location.getWorld()).getHandle().addFreshEntity(nmsEntity, CreatureSpawnEvent.SpawnReason.CUSTOM);
+		} else {
+			Log.error("VersionIndependentUtils", "Object isnt instance of Entity.");
+		}
+	}
 }
