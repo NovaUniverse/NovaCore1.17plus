@@ -17,6 +17,7 @@ import net.minecraft.world.entity.item.EntityFallingBlock;
 import net.minecraft.world.entity.item.EntityTNTPrimed;
 import net.minecraft.world.phys.AxisAlignedBB;
 import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17;
+import net.novauniverse.spigot.version.shared.v1_16plus.SharedBannerItemStackCreator;
 import net.zeeraa.novacore.commons.log.Log;
 import net.zeeraa.novacore.commons.utils.ListUtils;
 import net.zeeraa.novacore.commons.utils.LoopableIterator;
@@ -1302,6 +1303,10 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 			Log.error("VersionIndependentUtils", "Could not set TNT's source. Entity UUID: " + tnt.getUniqueId() + " Entity ID: " + tnt.getEntityId());
 			e.printStackTrace();
 		}
-
+	}
+	
+	@Override
+	public ItemStack getColoredBannerItemStack(DyeColor color) {
+		return SharedBannerItemStackCreator.getColoredBannerItemStack(color);
 	}
 }
