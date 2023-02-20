@@ -1326,7 +1326,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	}
 	@Override
 	public void spawnCustomEntity(Object entity, Location location) {
-		if (entity instanceof net.minecraft.world.entity.Entity) {
+		if (net.minecraft.world.entity.Entity.class.isAssignableFrom(entity.getClass())) {
 			net.minecraft.world.entity.Entity nmsEntity = (net.minecraft.world.entity.Entity) entity;
 			nmsEntity.a(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
 			((CraftWorld)location.getWorld()).getHandle().addFreshEntity(nmsEntity, CreatureSpawnEvent.SpawnReason.CUSTOM);
