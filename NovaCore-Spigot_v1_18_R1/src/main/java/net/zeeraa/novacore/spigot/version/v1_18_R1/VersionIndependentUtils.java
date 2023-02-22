@@ -1324,4 +1324,9 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 			Log.error("VersionIndependentUtils", "Object isnt instance of Entity.");
 		}
 	}
+
+	@Override
+	public void registerCustomEntityWithEntityId(Class<?> aClass, String s, int i) {
+		// there is no need to register custom entities on 1.14+
+	}
 }
