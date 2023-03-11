@@ -16,7 +16,6 @@ import net.minecraft.world.level.block.state.BlockBase;
 import net.minecraft.world.phys.AxisAlignedBB;
 import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17;
 import net.novauniverse.spigot.version.shared.v1_16plus.SharedBannerItemStackCreator;
-import net.zeeraa.novacore.commons.log.Log;
 import net.zeeraa.novacore.commons.utils.ListUtils;
 import net.zeeraa.novacore.commons.utils.LoopableIterator;
 import net.zeeraa.novacore.spigot.abstraction.ChunkLoader;
@@ -617,7 +616,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 
 		case CLICK:
 			return Sound.BLOCK_LEVER_CLICK;
-			
+
 		case BLAZE_HIT:
 			return Sound.ENTITY_BLAZE_HURT;
 
@@ -630,7 +629,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 
 	@Override
 	public void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
-		if(title.length() == 0) {
+		if (title.length() == 0) {
 			title = " ";
 		}
 		player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
@@ -1113,19 +1112,19 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		if (packet instanceof Packet) {
 			((CraftPlayer) player).getHandle().b.a((Packet<?>) packet);
 		} else {
-			Log.warn("NovaCore", "Packet sent isnt instance of " + Packet.class.getCanonicalName());
+			AbstractionLogger.getLogger().warning("NovaCore", "Packet sent isnt instance of " + Packet.class.getCanonicalName());
 		}
 	}
 
 	@Override
 	public void addAttribute(ItemStack item, ItemMeta meta, AttributeInfo attributeInfo) {
 		if (attributeInfo == null) {
-			Log.error("VersionIndependentUtils", "AttributeInfo is null");
+			AbstractionLogger.getLogger().error("VersionIndependentUtils", "AttributeInfo is null");
 			return;
 		}
 
 		if (attributeInfo.getAttribute() == null) {
-			Log.error("VersionIndependentUtils", "Attribute is null");
+			AbstractionLogger.getLogger().error("VersionIndependentUtils", "Attribute is null");
 			return;
 		}
 
@@ -1136,7 +1135,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 					attributeInfo.getValue(), AttributeModifier.Operation.valueOf(attributeInfo.getOperation().name()));
 
 			if (!meta.addAttributeModifier(Attribute.valueOf(attributeInfo.getAttribute().name()), modifier)) {
-				Log.error("VersionIndependentUtils", "Something went wrong when adding the attribute " + attributeInfo.getAttribute().getKey());
+				AbstractionLogger.getLogger().error("VersionIndependentUtils", "Something went wrong when adding the attribute " + attributeInfo.getAttribute().getKey());
 			}
 
 		} else {
@@ -1144,7 +1143,7 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 				AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), attributeInfo.getAttribute().getKey(),
 						attributeInfo.getValue(), AttributeModifier.Operation.valueOf(attributeInfo.getOperation().name()), EquipmentSlot.valueOf(eSlot.name()));
 				if (!meta.addAttributeModifier(Attribute.valueOf(attributeInfo.getAttribute().name()), modifier)) {
-					Log.error("VersionIndependentUtils", "Something went wrong when adding the attribute " + attributeInfo.getAttribute().getKey());
+					AbstractionLogger.getLogger().error("VersionIndependentUtils", "Something went wrong when adding the attribute " + attributeInfo.getAttribute().getKey());
 				}
 			}
 		}
@@ -1303,10 +1302,11 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 		DecimalFormat df = new DecimalFormat("0.00");
 		double currentWidth = aabb.d - entity.getLocation().getX();
 		double currentHeight = aabb.e - entity.getLocation().getY();
-		float width = Float.parseFloat(df.format(currentWidth).replace(',','.')) * 2;
-		float height = Float.parseFloat(df.format(currentHeight).replace(',','.'));
+		float width = Float.parseFloat(df.format(currentWidth).replace(',', '.')) * 2;
+		float height = Float.parseFloat(df.format(currentHeight).replace(',', '.'));
 		return new EntityBoundingBox(height, width);
 	}
+
 	@Override
 	public void setSource(TNTPrimed tnt, LivingEntity source) {
 		EntityTNTPrimed etp = ((CraftTNTPrimed) tnt).getHandle();
@@ -1316,11 +1316,11 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 			f.setAccessible(true);
 			f.set(etp, el);
 		} catch (Exception e) {
-			Log.error("VersionIndependentUtils", "Could not set TNT's source. Entity UUID: " + tnt.getUniqueId() + " Entity ID: " + tnt.getEntityId());
+			AbstractionLogger.getLogger().error("VersionIndependentUtils", "Could not set TNT's source. Entity UUID: " + tnt.getUniqueId() + " Entity ID: " + tnt.getEntityId());
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public ItemStack getColoredBannerItemStack(DyeColor color) {
 		return SharedBannerItemStackCreator.getColoredBannerItemStack(color);
@@ -1330,20 +1330,23 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	public void registerCustomEntity(Class<?> entity, String name) {
 		// there is no need to register custom entities on 1.14+
 	}
+
 	@Override
 	public void spawnCustomEntity(Object entity, Location location) {
 		if (net.minecraft.world.entity.Entity.class.isAssignableFrom(entity.getClass())) {
 			net.minecraft.world.entity.Entity nmsEntity = (net.minecraft.world.entity.Entity) entity;
 			nmsEntity.a(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
-			((CraftWorld)location.getWorld()).getHandle().addFreshEntity(nmsEntity, CreatureSpawnEvent.SpawnReason.CUSTOM);
+			((CraftWorld) location.getWorld()).getHandle().addFreshEntity(nmsEntity, CreatureSpawnEvent.SpawnReason.CUSTOM);
 		} else {
-			Log.error("VersionIndependentUtils", "Object isnt instance of Entity.");
+			AbstractionLogger.getLogger().error("VersionIndependentUtils", "Object isnt instance of Entity.");
 		}
 	}
+
 	@Override
 	public void registerCustomEntityWithEntityId(Class<?> aClass, String s, int i) {
 		// there is no need to register custom entities on 1.14+
 	}
+
 	@Override
 	public float getBlockBlastResistance(Material material) {
 		if (material.isBlock()) {
@@ -1353,12 +1356,12 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 				str.setAccessible(true);
 				return str.getFloat(block);
 			} catch (Exception e) {
-				Log.error("VersionIndependentUtils", "An error occured");
+				AbstractionLogger.getLogger().error("VersionIndependentUtils", "An error occured");
 				e.printStackTrace();
 				return 0;
 			}
 		} else {
-			Log.warn("VersionIndependentUtils", "Material isnt a block.");
+			AbstractionLogger.getLogger().warning("VersionIndependentUtils", "Material isnt a block.");
 			return 0;
 		}
 	}
