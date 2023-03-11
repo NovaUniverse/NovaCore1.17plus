@@ -12,6 +12,7 @@ import net.minecraft.network.protocol.game.PacketPlayOutEntityStatus;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.item.EntityFallingBlock;
 import net.minecraft.world.entity.item.EntityTNTPrimed;
+import net.minecraft.world.level.block.state.BlockBase;
 import net.minecraft.world.phys.AxisAlignedBB;
 import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17;
 import net.novauniverse.spigot.version.shared.v1_16plus.SharedBannerItemStackCreator;
@@ -1342,5 +1343,23 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 	@Override
 	public void registerCustomEntityWithEntityId(Class<?> aClass, String s, int i) {
 		// there is no need to register custom entities on 1.14+
+	}
+	@Override
+	public float getBlockBlastResistance(Material material) {
+		if (material.isBlock()) {
+			net.minecraft.world.level.block.Block block = CraftMagicNumbers.getBlock(material);
+			try {
+				Field str = BlockBase.class.getDeclaredField("aH");
+				str.setAccessible(true);
+				return str.getFloat(block);
+			} catch (Exception e) {
+				Log.error("VersionIndependentUtils", "An error occured");
+				e.printStackTrace();
+				return 0;
+			}
+		} else {
+			Log.warn("VersionIndependentUtils", "Material isnt a block.");
+			return 0;
+		}
 	}
 }
