@@ -1294,7 +1294,6 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 
 	@Override
 	public EntityBoundingBox getEntityBoundingBox(Entity entity) {
-
 		net.minecraft.world.entity.Entity nmsEntity = ((CraftEntity) entity).getHandle();
 		AxisAlignedBB aabb = nmsEntity.cD();
 
