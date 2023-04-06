@@ -1353,4 +1353,9 @@ public class VersionIndependentUtils extends net.zeeraa.novacore.spigot.abstract
 			return 0;
 		}
 	}
+	
+	@Override
+	public GameProfile getGameProfile(Player player) {
+		return ((CraftPlayer) player).getHandle().fp();
+	}
 }
