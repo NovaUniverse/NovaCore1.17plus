@@ -11,7 +11,7 @@ import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import net.zeeraa.novacore.spigot.abstraction.events.VersionIndependentPlayerAchievementAwardedEvent;
 import net.zeeraa.novacore.spigot.abstraction.events.VersionIndependentPlayerPickUpItemEvent;
 
-public class Listeners extends net.zeeraa.novacore.spigot.abstraction.Listeners implements Listener {
+public class ListenersImplementation extends net.zeeraa.novacore.spigot.abstraction.Listeners implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = false)
 	public void onAchievement(PlayerAdvancementDoneEvent e) {
 		VersionIndependentPlayerAchievementAwardedEvent event = new VersionIndependentPlayerAchievementAwardedEvent(e.getPlayer(), e.getAdvancement().getKey().toString(), false);

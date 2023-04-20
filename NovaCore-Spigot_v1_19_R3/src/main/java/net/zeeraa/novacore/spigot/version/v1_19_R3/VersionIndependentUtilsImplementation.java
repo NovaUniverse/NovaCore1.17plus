@@ -1,6 +1,4 @@
-package net.zeeraa.novacore.spigot.version.v1_18_R2;
-
-import java.lang.reflect.Field;
+package net.zeeraa.novacore.spigot.version.v1_19_R3;
 
 import net.minecraft.core.BlockPosition;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,6 +8,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.PacketPlayOutEntityStatus;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.item.EntityFallingBlock;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.item.EntityTNTPrimed;
 import net.minecraft.world.level.block.state.BlockBase;
 import net.minecraft.world.phys.AxisAlignedBB;
@@ -43,14 +42,14 @@ import net.zeeraa.novacore.spigot.abstraction.packet.PacketManager;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_18_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_18_R2.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_18_R2.entity.CraftFallingBlock;
-import org.bukkit.craftbukkit.v1_18_R2.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_18_R2.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_18_R2.entity.CraftTNTPrimed;
-import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_18_R2.util.CraftMagicNumbers;
+import org.bukkit.craftbukkit.v1_19_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_19_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_19_R3.entity.CraftFallingBlock;
+import org.bukkit.craftbukkit.v1_19_R3.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_19_R3.entity.CraftTNTPrimed;
+import org.bukkit.craftbukkit.v1_19_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_19_R3.util.CraftMagicNumbers;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
@@ -66,14 +65,11 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
-import com.mojang.authlib.properties.PropertyMap;
-
-import net.minecraft.server.MinecraftServer;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.RayTraceResult;
 
+import java.lang.reflect.Field;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -82,7 +78,7 @@ import java.util.Locale;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class VersionIndependentUtils extends BaseVersionIndependentUtilImplementation1_17Plus {
+public class VersionIndependentUtilsImplementation extends BaseVersionIndependentUtilImplementation1_17Plus {
 	private ItemBuilderRecordList itemBuilderRecordList;
 	private boolean damagePlayerWarningShown = false;
 	private PacketManager packetManager;
@@ -97,7 +93,7 @@ public class VersionIndependentUtils extends BaseVersionIndependentUtilImplement
 		return chunkLoader;
 	}
 
-	public VersionIndependentUtils() {
+	public VersionIndependentUtilsImplementation() {
 		super(new DyeColorToMaterialMapper_1_17());
 		itemBuilderRecordList = new ItemBuilderRecordListv1_17();
 	}
@@ -105,11 +101,6 @@ public class VersionIndependentUtils extends BaseVersionIndependentUtilImplement
 	@Override
 	public ItemBuilderRecordList getItemBuilderRecordList() {
 		return itemBuilderRecordList;
-	}
-
-	@Override
-	public void resetEntityMaxHealth(LivingEntity livingEntity) {
-		livingEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(livingEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getDefaultValue());
 	}
 
 	@SuppressWarnings({ "deprecation", "resource" })
@@ -125,7 +116,7 @@ public class VersionIndependentUtils extends BaseVersionIndependentUtilImplement
 
 		if (!damagePlayerWarningShown) {
 			damagePlayerWarningShown = true;
-			AbstractionLogger.getLogger().warning("Nova VersionIndependentUtils v1_17_R1", "damagePlayer will not work on 1.17 and will instead call Player#damage(double)");
+			AbstractionLogger.getLogger().warning("Nova VersionIndependentUtils v1_19_R1", "damagePlayer will not work on 1.17 and will instead call Player#damage(double)");
 		}
 
 		player.damage(damage);
@@ -517,7 +508,7 @@ public class VersionIndependentUtils extends BaseVersionIndependentUtilImplement
 
 	@Override
 	public VersionIndependentItems getVersionIndependantItems() {
-		return new net.zeeraa.novacore.spigot.version.v1_18_R2.VersionIndependantItems();
+		return new net.zeeraa.novacore.spigot.version.v1_19_R3.VersionIndependantItemsImplementation();
 	}
 
 	@Override
@@ -591,16 +582,16 @@ public class VersionIndependentUtils extends BaseVersionIndependentUtilImplement
 
 		case GRILLED_PORK:
 			return Material.COOKED_PORKCHOP;
-			
+
 		case EXP_BOTTLE:
 			return Material.EXPERIENCE_BOTTLE;
-			
+
 		case WOOL:
 			return Material.WHITE_WOOL;
-			
+
 		case FIREBALL:
 			return Material.FIRE_CHARGE;
-			
+
 		case GUNPOWDER:
 			return Material.GUNPOWDER;
 
@@ -613,7 +604,7 @@ public class VersionIndependentUtils extends BaseVersionIndependentUtilImplement
 
 	@Override
 	public NovaCoreGameVersion getNovaCoreGameVersion() {
-		return NovaCoreGameVersion.V_1_18_R2;
+		return NovaCoreGameVersion.V_1_19_R3;
 	}
 
 	public static final Material[] SIGN_MATERIALS = { Material.ACACIA_SIGN, Material.ACACIA_WALL_SIGN, Material.BIRCH_SIGN, Material.BIRCH_WALL_SIGN, Material.CRIMSON_SIGN, Material.CRIMSON_WALL_SIGN, Material.DARK_OAK_SIGN, Material.DARK_OAK_WALL_SIGN, Material.JUNGLE_SIGN, Material.JUNGLE_WALL_SIGN, Material.OAK_SIGN, Material.OAK_WALL_SIGN, Material.SPRUCE_SIGN, Material.SPRUCE_WALL_SIGN, Material.WARPED_SIGN, Material.WARPED_WALL_SIGN };
@@ -637,7 +628,7 @@ public class VersionIndependentUtils extends BaseVersionIndependentUtilImplement
 	@Override
 	public float getPlayerBodyRotation(Player player) {
 		CraftPlayer craftPlayer = (CraftPlayer) player;
-		return craftPlayer.getHandle().aY;
+		return craftPlayer.getHandle().aU;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -821,7 +812,7 @@ public class VersionIndependentUtils extends BaseVersionIndependentUtilImplement
 	@Override
 	public PacketManager getPacketManager() {
 		if (packetManager == null)
-			packetManager = new net.zeeraa.novacore.spigot.version.v1_18_R2.packet.PacketManager();
+			packetManager = new net.zeeraa.novacore.spigot.version.v1_19_R3.packet.PacketManager();
 		return packetManager;
 	}
 
@@ -829,7 +820,7 @@ public class VersionIndependentUtils extends BaseVersionIndependentUtilImplement
 	@Override
 	public boolean canBreakBlock(ItemStack itemStack, Material material) {
 		net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(itemStack);
-		NBTTagCompound nbtTag = nmsItem.t();
+		NBTTagCompound nbtTag = nmsItem.v();
 		NBTTagList list = nbtTag.c("CanDestroy", 8);
 		if (list == null) {
 			return false;
@@ -839,7 +830,7 @@ public class VersionIndependentUtils extends BaseVersionIndependentUtilImplement
 			f.setAccessible(true);
 
 			for (NBTTagString nbt : (List<NBTTagString>) f.get(list)) {
-				boolean b = getMaterialFromName(nbt.e_()) == material;
+				boolean b = getMaterialFromName(nbt.f_()) == material;
 
 				if (b) {
 					return true;
@@ -850,6 +841,7 @@ public class VersionIndependentUtils extends BaseVersionIndependentUtilImplement
 		}
 
 		return false;
+
 	}
 
 	@Override
@@ -873,6 +865,7 @@ public class VersionIndependentUtils extends BaseVersionIndependentUtilImplement
 		}
 
 		return Material.matchMaterial(s.replace("minecraft:", "").toLowerCase(Locale.ROOT));
+
 	}
 
 	@Override
@@ -943,7 +936,7 @@ public class VersionIndependentUtils extends BaseVersionIndependentUtilImplement
 	@Override
 	public FallingBlock spawnFallingBlock(Location location, Material material, byte data, Consumer<FallingBlock> consumer) {
 		try {
-			EntityFallingBlock fb = EntityFallingBlock.fall(((CraftWorld) location.getWorld()).getHandle(), new BlockPosition(location.getX(), location.getY(), location.getZ()), CraftMagicNumbers.getBlock(material).n(), CreatureSpawnEvent.SpawnReason.CUSTOM);
+			EntityFallingBlock fb = EntityFallingBlock.fall(((CraftWorld) location.getWorld()).getHandle(), new BlockPosition(location.getBlockX(), location.getBlockY(), location.getBlockZ()), CraftMagicNumbers.getBlock(material).o(), CreatureSpawnEvent.SpawnReason.CUSTOM);
 			if (fb.getBukkitEntity() instanceof CraftFallingBlock) {
 				CraftFallingBlock cfb = (CraftFallingBlock) fb.getBukkitEntity();
 				consumer.accept(cfb);
@@ -1015,7 +1008,7 @@ public class VersionIndependentUtils extends BaseVersionIndependentUtilImplement
 	@Override
 	public EntityBoundingBox getEntityBoundingBox(Entity entity) {
 		net.minecraft.world.entity.Entity nmsEntity = ((CraftEntity) entity).getHandle();
-		AxisAlignedBB aabb = nmsEntity.cw();
+		AxisAlignedBB aabb = nmsEntity.cD();
 
 		DecimalFormat df = new DecimalFormat("0.00");
 		double currentWidth = aabb.d - entity.getLocation().getX();
@@ -1049,7 +1042,7 @@ public class VersionIndependentUtils extends BaseVersionIndependentUtilImplement
 			AbstractionLogger.getLogger().error("VersionIndependentUtils", "Object isnt instance of Entity.");
 		}
 	}
-	
+
 	@Override
 	public float getBlockBlastResistance(Material material) {
 		if (material.isBlock()) {
@@ -1071,6 +1064,6 @@ public class VersionIndependentUtils extends BaseVersionIndependentUtilImplement
 
 	@Override
 	public GameProfile getGameProfile(Player player) {
-		return ((CraftPlayer) player).getHandle().fq();
+		return ((CraftPlayer) player).getHandle().fI();
 	}
 }

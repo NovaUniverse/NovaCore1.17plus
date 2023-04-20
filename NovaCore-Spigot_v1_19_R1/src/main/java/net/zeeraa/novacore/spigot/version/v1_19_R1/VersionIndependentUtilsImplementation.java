@@ -80,7 +80,7 @@ import java.util.Locale;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class VersionIndependentUtils extends BaseVersionIndependentUtilImplementation1_17Plus {
+public class VersionIndependentUtilsImplementation extends BaseVersionIndependentUtilImplementation1_17Plus {
 	private ItemBuilderRecordList itemBuilderRecordList;
 	private boolean damagePlayerWarningShown = false;
 	private PacketManager packetManager;
@@ -95,7 +95,7 @@ public class VersionIndependentUtils extends BaseVersionIndependentUtilImplement
 		return chunkLoader;
 	}
 
-	public VersionIndependentUtils() {
+	public VersionIndependentUtilsImplementation() {
 		super(new DyeColorToMaterialMapper_1_17());
 		itemBuilderRecordList = new ItemBuilderRecordListv1_17();
 	}
@@ -510,7 +510,7 @@ public class VersionIndependentUtils extends BaseVersionIndependentUtilImplement
 
 	@Override
 	public VersionIndependentItems getVersionIndependantItems() {
-		return new net.zeeraa.novacore.spigot.version.v1_19_R1.VersionIndependantItems();
+		return new net.zeeraa.novacore.spigot.version.v1_19_R1.VersionIndependantItemsImplementation();
 	}
 
 	@Override

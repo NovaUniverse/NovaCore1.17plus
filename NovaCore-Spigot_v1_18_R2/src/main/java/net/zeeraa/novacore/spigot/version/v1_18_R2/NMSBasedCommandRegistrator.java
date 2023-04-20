@@ -1,4 +1,4 @@
-package net.zeeraa.novacore.spigot.version.v1_19_R2;
+package net.zeeraa.novacore.spigot.version.v1_18_R2;
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -7,8 +7,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.SimpleCommandMap;
-import org.bukkit.craftbukkit.v1_19_R2.CraftServer;
-import org.bukkit.craftbukkit.v1_19_R2.command.CraftCommandMap;
+import org.bukkit.craftbukkit.v1_18_R2.CraftServer;
+import org.bukkit.craftbukkit.v1_18_R2.command.CraftCommandMap;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -17,10 +17,10 @@ import org.bukkit.plugin.Plugin;
  * 
  * @author Zeeraa
  */
-public class CommandRegistrator implements net.zeeraa.novacore.spigot.abstraction.CommandRegistrator {
+public class NMSBasedCommandRegistrator implements net.zeeraa.novacore.spigot.abstraction.CommandRegistrator {
 	private CommandMap cmap = null;
 
-	public CommandRegistrator() {
+	public NMSBasedCommandRegistrator() {
 		try {
 			Field f = CraftServer.class.getDeclaredField("commandMap");
 			f.setAccessible(true);

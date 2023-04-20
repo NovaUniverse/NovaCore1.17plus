@@ -1,9 +1,9 @@
-package net.zeeraa.novacore.spigot.version.v1_19_R1;
+package net.zeeraa.novacore.spigot.version.v1_19_R2;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-public class VersionIndependantItems extends net.zeeraa.novacore.spigot.abstraction.VersionIndependentItems {
+public class VersionIndependantItemsImplementation extends net.zeeraa.novacore.spigot.abstraction.VersionIndependentItems {
 	@Override
 	public ItemStack getPlayerSkull() {
 		return new ItemStack(Material.PLAYER_HEAD, 1);
