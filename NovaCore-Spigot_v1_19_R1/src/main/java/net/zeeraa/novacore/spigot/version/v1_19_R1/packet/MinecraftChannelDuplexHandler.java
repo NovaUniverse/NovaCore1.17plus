@@ -78,6 +78,7 @@ public class MinecraftChannelDuplexHandler extends net.zeeraa.novacore.spigot.ab
 				case c -> events.add(new PlayerStopBlockDigEvent(player, block, face));
 				case b -> events.add(new PlayerAbortBlockDigEvent(player, block, face));
 				case a -> events.add(new PlayerStartBlockDigEvent(player, block, face));
+				default -> {}
 			}
 		}
 
