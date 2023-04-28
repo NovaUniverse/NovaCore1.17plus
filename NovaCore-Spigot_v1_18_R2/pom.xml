@@ -50,6 +50,11 @@
 			<id>novauniverse2</id>
 			<url>https://nexus2.novauniverse.net/repository/novauniverse-group/</url>
 		</repository>
+		
+		<repository>
+			<id>novauniverse2-thrirdparty</id>
+			<url>https://nexus2.novauniverse.net/repository/third-party/</url>
+		</repository>
 
 		<repository>
 			<id>minecraft-repo</id>
@@ -122,6 +127,12 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<dependency>
+		    <groupId>com.mojang</groupId>
+		    <artifactId>datafixerupper</artifactId>
+		    <version>6.0.0-SNAPSHOT</version>
+		    <scope>provided</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>org.json</groupId>

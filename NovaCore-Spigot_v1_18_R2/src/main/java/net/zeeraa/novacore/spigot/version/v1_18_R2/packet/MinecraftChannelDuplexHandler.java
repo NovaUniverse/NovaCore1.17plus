@@ -1,34 +1,16 @@
 package net.zeeraa.novacore.spigot.version.v1_18_R2.packet;
 
 import net.minecraft.core.BlockPosition;
-import net.minecraft.network.protocol.game.PacketPlayInArmAnimation;
 import net.minecraft.network.protocol.game.PacketPlayInBlockDig;
-import net.minecraft.network.protocol.game.PacketPlayInSettings;
-import net.minecraft.network.protocol.game.PacketPlayInSpectate;
 import net.minecraft.network.protocol.game.PacketPlayInSteerVehicle;
-import net.minecraft.network.protocol.game.PacketPlayOutNamedSoundEffect;
-import net.minecraft.resources.MinecraftKey;
-import net.minecraft.sounds.SoundEffect;
-import net.zeeraa.novacore.spigot.abstraction.VersionIndependentUtils;
-import net.zeeraa.novacore.spigot.abstraction.enums.ChatVisibility;
-import net.zeeraa.novacore.spigot.abstraction.enums.Hand;
-import net.zeeraa.novacore.spigot.abstraction.enums.MainHand;
-import net.zeeraa.novacore.spigot.abstraction.enums.SoundCategory;
 import net.zeeraa.novacore.spigot.abstraction.packet.PacketManager;
 import net.zeeraa.novacore.spigot.abstraction.packet.event.*;
-import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
-
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 public class MinecraftChannelDuplexHandler extends net.zeeraa.novacore.spigot.abstraction.packet.MinecraftChannelDuplexHandler {
 
