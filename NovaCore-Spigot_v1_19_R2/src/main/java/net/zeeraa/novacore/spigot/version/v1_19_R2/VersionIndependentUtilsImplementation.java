@@ -1,32 +1,13 @@
 package net.zeeraa.novacore.spigot.version.v1_19_R2;
 
-import net.minecraft.core.BlockPosition;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.PacketPlayOutEntityStatus;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.item.EntityFallingBlock;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.entity.item.EntityTNTPrimed;
-import net.minecraft.world.level.block.state.BlockBase;
-import net.minecraft.world.phys.AxisAlignedBB;
-import net.novauniverse.novacore1_17plus.shared.BaseVersionIndependentUtilImplementation1_17Plus;
-import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17;
-import net.zeeraa.novacore.commons.utils.ListUtils;
-import net.zeeraa.novacore.spigot.abstraction.ChunkLoader;
-import net.zeeraa.novacore.spigot.abstraction.ItemBuilderRecordList;
-import net.zeeraa.novacore.spigot.abstraction.MaterialNameList;
-import net.zeeraa.novacore.spigot.abstraction.VersionIndependentItems;
-import net.zeeraa.novacore.spigot.abstraction.commons.AttributeInfo;
-import net.zeeraa.novacore.spigot.abstraction.enums.ColoredBlockType;
-import net.zeeraa.novacore.spigot.abstraction.enums.DeathType;
-import net.zeeraa.novacore.spigot.abstraction.enums.NovaCoreGameVersion;
-import net.zeeraa.novacore.spigot.abstraction.enums.PlayerDamageReason;
-import net.zeeraa.novacore.spigot.abstraction.enums.VersionIndependenceLayerError;
-import net.zeeraa.novacore.spigot.abstraction.enums.VersionIndependentMaterial;
-import net.zeeraa.novacore.spigot.abstraction.enums.VersionIndependentSound;
+import java.lang.reflect.Field;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
+import java.util.function.Consumer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
@@ -35,10 +16,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
-import net.zeeraa.novacore.spigot.abstraction.commons.EntityBoundingBox;
-import net.zeeraa.novacore.spigot.abstraction.log.AbstractionLogger;
-import net.zeeraa.novacore.spigot.abstraction.manager.CustomSpectatorManager;
-import net.zeeraa.novacore.spigot.abstraction.packet.PacketManager;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Block;
@@ -65,24 +42,46 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import com.mojang.authlib.GameProfile;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.RayTraceResult;
 
-import java.lang.reflect.Field;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
-import java.util.function.Consumer;
+import com.mojang.authlib.GameProfile;
+
+import net.minecraft.core.BlockPosition;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.PacketPlayOutEntityStatus;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.entity.item.EntityFallingBlock;
+import net.minecraft.world.entity.item.EntityTNTPrimed;
+import net.minecraft.world.level.block.state.BlockBase;
+import net.minecraft.world.phys.AxisAlignedBB;
+import net.novauniverse.novacore1_17plus.shared.BaseVersionIndependentUtilImplementation1_17Plus;
+import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17;
+import net.zeeraa.novacore.commons.utils.ListUtils;
+import net.zeeraa.novacore.spigot.abstraction.ChunkLoader;
+import net.zeeraa.novacore.spigot.abstraction.ItemBuilderRecordList;
+import net.zeeraa.novacore.spigot.abstraction.MaterialNameList;
+import net.zeeraa.novacore.spigot.abstraction.VersionIndependentItems;
+import net.zeeraa.novacore.spigot.abstraction.commons.AttributeInfo;
+import net.zeeraa.novacore.spigot.abstraction.commons.EntityBoundingBox;
+import net.zeeraa.novacore.spigot.abstraction.enums.ColoredBlockType;
+import net.zeeraa.novacore.spigot.abstraction.enums.DeathType;
+import net.zeeraa.novacore.spigot.abstraction.enums.NovaCoreGameVersion;
+import net.zeeraa.novacore.spigot.abstraction.enums.PlayerDamageReason;
+import net.zeeraa.novacore.spigot.abstraction.enums.VersionIndependenceLayerError;
+import net.zeeraa.novacore.spigot.abstraction.enums.VersionIndependentMaterial;
+import net.zeeraa.novacore.spigot.abstraction.enums.VersionIndependentSound;
+import net.zeeraa.novacore.spigot.abstraction.log.AbstractionLogger;
+import net.zeeraa.novacore.spigot.abstraction.manager.CustomSpectatorManager;
 
 public class VersionIndependentUtilsImplementation extends BaseVersionIndependentUtilImplementation1_17Plus {
 	private ItemBuilderRecordList itemBuilderRecordList;
 	private boolean damagePlayerWarningShown = false;
-	private PacketManager packetManager;
 
 	private ChunkLoader chunkLoader;
 
@@ -810,13 +809,6 @@ public class VersionIndependentUtilsImplementation extends BaseVersionIndependen
 				return DeathType.GENERIC_COMBAT;
 			return DeathType.GENERIC;
 		}
-	}
-
-	@Override
-	public PacketManager getPacketManager() {
-		if (packetManager == null)
-			packetManager = new net.zeeraa.novacore.spigot.version.v1_19_R2.packet.PacketManager();
-		return packetManager;
 	}
 
 	@SuppressWarnings("unchecked")

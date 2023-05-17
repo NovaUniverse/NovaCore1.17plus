@@ -32,7 +32,6 @@ import net.zeeraa.novacore.spigot.abstraction.enums.VersionIndependentMaterial;
 import net.zeeraa.novacore.spigot.abstraction.enums.VersionIndependentSound;
 import net.zeeraa.novacore.spigot.abstraction.log.AbstractionLogger;
 import net.zeeraa.novacore.spigot.abstraction.manager.CustomSpectatorManager;
-import net.zeeraa.novacore.spigot.abstraction.packet.PacketManager;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.FluidCollisionMode;
@@ -81,7 +80,6 @@ import java.util.function.Consumer;
 public class VersionIndependentUtilsImplementation extends BaseVersionIndependentUtilImplementation1_17Plus {
 	private ItemBuilderRecordList itemBuilderRecordList;
 	private boolean damagePlayerWarningShown = false;
-	private PacketManager packetManager;
 
 	private ChunkLoader chunkLoader;
 
@@ -834,13 +832,6 @@ public class VersionIndependentUtilsImplementation extends BaseVersionIndependen
 				return DeathType.GENERIC_COMBAT;
 			return DeathType.GENERIC;
 		}
-	}
-
-	@Override
-	public PacketManager getPacketManager() {
-		if (packetManager == null)
-			packetManager = new net.zeeraa.novacore.spigot.version.v1_18_R1.packet.PacketManager();
-		return packetManager;
 	}
 
 	@SuppressWarnings("unchecked")
