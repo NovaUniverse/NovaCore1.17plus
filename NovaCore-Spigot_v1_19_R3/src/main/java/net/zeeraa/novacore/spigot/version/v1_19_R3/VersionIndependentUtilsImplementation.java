@@ -934,7 +934,9 @@ public class VersionIndependentUtilsImplementation extends BaseVersionIndependen
 			EntityFallingBlock fb = EntityFallingBlock.fall(((CraftWorld) location.getWorld()).getHandle(), new BlockPosition(location.getBlockX(), location.getBlockY(), location.getBlockZ()), CraftMagicNumbers.getBlock(material).o(), CreatureSpawnEvent.SpawnReason.CUSTOM);
 			if (fb.getBukkitEntity() instanceof CraftFallingBlock) {
 				CraftFallingBlock cfb = (CraftFallingBlock) fb.getBukkitEntity();
-				consumer.accept(cfb);
+				if (consumer != null) {
+					consumer.accept(cfb);
+				}
 				((CraftWorld) location.getWorld()).getHandle().addFreshEntity(fb, CreatureSpawnEvent.SpawnReason.CUSTOM);
 				return cfb;
 			} else {
