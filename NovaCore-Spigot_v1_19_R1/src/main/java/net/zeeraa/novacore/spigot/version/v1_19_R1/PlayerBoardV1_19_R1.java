@@ -45,8 +45,6 @@ public class PlayerBoardV1_19_R1 extends BPlayerBoard {
 		ScoreboardObjective nmsObjective = (ScoreboardObjective) ReflectUtils.getHandle(objective);
 		PacketPlayOutScoreboardObjective packet = new PacketPlayOutScoreboardObjective(nmsObjective, mode.ordinal());
 		playerHandle.b.a(packet);
-		
-		this.init();
 	}
 
 	@Override
