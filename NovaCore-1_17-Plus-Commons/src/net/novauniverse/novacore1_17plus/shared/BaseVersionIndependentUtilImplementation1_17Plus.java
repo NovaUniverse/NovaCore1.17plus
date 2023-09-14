@@ -4,10 +4,11 @@ import org.bukkit.entity.Player;
 
 import net.novauniverse.spigot.version.shared.v1_16plus.BaseVersionIndependentUtilImplementation1_16Plus;
 import net.novauniverse.spigot.version.shared.v1_16plus.DyeColorToMaterialMapper;
+import net.zeeraa.novacore.spigot.abstraction.VersionIndependantLoader;
 
 public abstract class BaseVersionIndependentUtilImplementation1_17Plus extends BaseVersionIndependentUtilImplementation1_16Plus {
-	public BaseVersionIndependentUtilImplementation1_17Plus(DyeColorToMaterialMapper colorToMaterialMapper) {
-		super(colorToMaterialMapper);
+	public BaseVersionIndependentUtilImplementation1_17Plus(VersionIndependantLoader loader, DyeColorToMaterialMapper colorToMaterialMapper) {
+		super(loader, colorToMaterialMapper);
 	}
 
 	@Override

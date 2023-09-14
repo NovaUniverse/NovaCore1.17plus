@@ -1,4 +1,4 @@
-package net.zeeraa.novacore.spigot.version.v1_19_R2;
+package net.zeeraa.novacore.spigot.version.v1_20_R1;
 
 import java.lang.reflect.Field;
 import java.text.DecimalFormat;
@@ -19,15 +19,14 @@ import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_19_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_19_R2.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_19_R2.entity.CraftFallingBlock;
-import org.bukkit.craftbukkit.v1_19_R2.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_19_R2.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_19_R2.entity.CraftTNTPrimed;
-import org.bukkit.craftbukkit.v1_19_R2.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_19_R2.util.CraftMagicNumbers;
-import org.bukkit.entity.ArmorStand;
+import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftFallingBlock;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftTNTPrimed;
+import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_20_R1.util.CraftMagicNumbers;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
@@ -116,9 +115,10 @@ public class VersionIndependentUtilsImplementation extends BaseVersionIndependen
 	@Override
 	public void damagePlayer(Player player, PlayerDamageReason reason, float damage) {
 		// TODO: implement this
+
 		if (!damagePlayerWarningShown) {
 			damagePlayerWarningShown = true;
-			AbstractionLogger.getLogger().warning("Nova VersionIndependentUtils v1_19_R2", "damagePlayer will not work on 1.17 and will instead call Player#damage(double)");
+			AbstractionLogger.getLogger().warning("Nova VersionIndependentUtils v1_20_R1", "damagePlayer will not work on 1.17 and will instead call Player#damage(double)");
 		}
 
 		player.damage(damage);
@@ -500,10 +500,10 @@ public class VersionIndependentUtilsImplementation extends BaseVersionIndependen
 
 		case BLAZE_HIT:
 			return Sound.ENTITY_BLAZE_HURT;
-			
+
 		case BURP:
 			return Sound.ENTITY_PLAYER_BURP;
-			
+
 		case FUSE:
 			return Sound.ENTITY_TNT_PRIMED;
 
@@ -516,7 +516,7 @@ public class VersionIndependentUtilsImplementation extends BaseVersionIndependen
 
 	@Override
 	public VersionIndependentItems getVersionIndependantItems() {
-		return new net.zeeraa.novacore.spigot.version.v1_19_R2.VersionIndependantItemsImplementation();
+		return new net.zeeraa.novacore.spigot.version.v1_20_R1.VersionIndependantItemsImplementation();
 	}
 
 	@Override
@@ -612,7 +612,7 @@ public class VersionIndependentUtilsImplementation extends BaseVersionIndependen
 
 	@Override
 	public NovaCoreGameVersion getNovaCoreGameVersion() {
-		return NovaCoreGameVersion.V_1_19_R2;
+		return NovaCoreGameVersion.V_1_20_R1;
 	}
 
 	public static final Material[] SIGN_MATERIALS = { Material.ACACIA_SIGN, Material.ACACIA_WALL_SIGN, Material.BIRCH_SIGN, Material.BIRCH_WALL_SIGN, Material.CRIMSON_SIGN, Material.CRIMSON_WALL_SIGN, Material.DARK_OAK_SIGN, Material.DARK_OAK_WALL_SIGN, Material.JUNGLE_SIGN, Material.JUNGLE_WALL_SIGN, Material.OAK_SIGN, Material.OAK_WALL_SIGN, Material.SPRUCE_SIGN, Material.SPRUCE_WALL_SIGN, Material.WARPED_SIGN, Material.WARPED_WALL_SIGN };
@@ -636,7 +636,7 @@ public class VersionIndependentUtilsImplementation extends BaseVersionIndependen
 	@Override
 	public float getPlayerBodyRotation(Player player) {
 		CraftPlayer craftPlayer = (CraftPlayer) player;
-		return craftPlayer.getHandle().aY;
+		return craftPlayer.getHandle().aU;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -831,7 +831,7 @@ public class VersionIndependentUtilsImplementation extends BaseVersionIndependen
 			f.setAccessible(true);
 
 			for (NBTTagString nbt : (List<NBTTagString>) f.get(list)) {
-				boolean b = getMaterialFromName(nbt.f_()) == material;
+				boolean b = getMaterialFromName(nbt.m_()) == material;
 
 				if (b) {
 					return true;
@@ -872,7 +872,7 @@ public class VersionIndependentUtilsImplementation extends BaseVersionIndependen
 	@Override
 	public void sendPacket(Player player, Object packet) {
 		if (packet instanceof Packet) {
-			((CraftPlayer) player).getHandle().b.a((Packet<?>) packet);
+			((CraftPlayer) player).getHandle().c.a((Packet<?>) packet);
 		} else {
 			AbstractionLogger.getLogger().warning("NovaCore", "Packet sent isnt instance of " + Packet.class.getCanonicalName());
 		}
@@ -937,7 +937,7 @@ public class VersionIndependentUtilsImplementation extends BaseVersionIndependen
 	@Override
 	public FallingBlock spawnFallingBlock(Location location, Material material, byte data, Consumer<FallingBlock> consumer) {
 		try {
-			EntityFallingBlock fb = EntityFallingBlock.fall(((CraftWorld) location.getWorld()).getHandle(), new BlockPosition(location.getX(), location.getY(), location.getZ()), CraftMagicNumbers.getBlock(material).n(), CreatureSpawnEvent.SpawnReason.CUSTOM);
+			EntityFallingBlock fb = EntityFallingBlock.fall(((CraftWorld) location.getWorld()).getHandle(), new BlockPosition(location.getBlockX(), location.getBlockY(), location.getBlockZ()), CraftMagicNumbers.getBlock(material).n(), CreatureSpawnEvent.SpawnReason.CUSTOM);
 			if (fb.getBukkitEntity() instanceof CraftFallingBlock) {
 				CraftFallingBlock cfb = (CraftFallingBlock) fb.getBukkitEntity();
 				if (consumer != null) {
@@ -957,7 +957,7 @@ public class VersionIndependentUtilsImplementation extends BaseVersionIndependen
 	@Override
 	public void displayTotem(Player player) {
 		PacketPlayOutEntityStatus packet = new PacketPlayOutEntityStatus(((CraftPlayer) player).getHandle(), (byte) 35);
-		((CraftPlayer) player).getHandle().b.a(packet);
+		((CraftPlayer) player).getHandle().c.a(packet);
 	}
 
 	@Override
@@ -970,18 +970,8 @@ public class VersionIndependentUtilsImplementation extends BaseVersionIndependen
 		ItemStack hand = player.getInventory().getItemInMainHand();
 		player.getInventory().setItemInMainHand(totem);
 		PacketPlayOutEntityStatus packet = new PacketPlayOutEntityStatus(((CraftPlayer) player).getHandle(), (byte) 35);
-		((CraftPlayer) player).getHandle().b.a(packet);
+		((CraftPlayer) player).getHandle().c.a(packet);
 		player.getInventory().setItemInMainHand(hand);
-	}
-
-	@Override
-	public void setMarker(ArmorStand stand, boolean marker) {
-		stand.setMarker(marker);
-	}
-
-	@Override
-	public boolean isMarker(ArmorStand stand) {
-		return stand.isMarker();
 	}
 
 	@Override
@@ -1021,7 +1011,7 @@ public class VersionIndependentUtilsImplementation extends BaseVersionIndependen
 	@Override
 	public EntityBoundingBox getEntityBoundingBox(Entity entity) {
 		net.minecraft.world.entity.Entity nmsEntity = ((CraftEntity) entity).getHandle();
-		AxisAlignedBB aabb = nmsEntity.cD();
+		AxisAlignedBB aabb = nmsEntity.cE();
 
 		DecimalFormat df = new DecimalFormat("0.00");
 		double currentWidth = aabb.d - entity.getLocation().getX();
@@ -1077,11 +1067,11 @@ public class VersionIndependentUtilsImplementation extends BaseVersionIndependen
 
 	@Override
 	public GameProfile getGameProfile(Player player) {
-		return ((CraftPlayer) player).getHandle().fD();
+		return ((CraftPlayer) player).getHandle().fM();
 	}
 
 	@Override
 	public BPlayerBoard initPlayerBoard(INetheriteBoard netheriteBoard, Player player, Scoreboard scoreboard, String name) throws Exception {
-		return new PlayerBoardV1_19_R2(netheriteBoard, player, scoreboard, name);
+		return new PlayerBoardV1_20_R1(netheriteBoard, player, scoreboard, name);
 	}
 }

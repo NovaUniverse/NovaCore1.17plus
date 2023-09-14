@@ -18,8 +18,10 @@ import net.novauniverse.novacore1_17plus.shared.BaseVersionIndependentUtilImplem
 import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17;
 import net.zeeraa.novacore.commons.utils.ListUtils;
 import net.zeeraa.novacore.spigot.abstraction.ChunkLoader;
+import net.zeeraa.novacore.spigot.abstraction.INetheriteBoard;
 import net.zeeraa.novacore.spigot.abstraction.ItemBuilderRecordList;
 import net.zeeraa.novacore.spigot.abstraction.MaterialNameList;
+import net.zeeraa.novacore.spigot.abstraction.VersionIndependantLoader;
 import net.zeeraa.novacore.spigot.abstraction.VersionIndependentItems;
 import net.zeeraa.novacore.spigot.abstraction.commons.AttributeInfo;
 import net.zeeraa.novacore.spigot.abstraction.commons.EntityBoundingBox;
@@ -32,6 +34,8 @@ import net.zeeraa.novacore.spigot.abstraction.enums.VersionIndependentMaterial;
 import net.zeeraa.novacore.spigot.abstraction.enums.VersionIndependentSound;
 import net.zeeraa.novacore.spigot.abstraction.log.AbstractionLogger;
 import net.zeeraa.novacore.spigot.abstraction.manager.CustomSpectatorManager;
+import net.zeeraa.novacore.spigot.abstraction.netheriteboard.BPlayerBoard;
+
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.FluidCollisionMode;
@@ -66,6 +70,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.util.RayTraceResult;
 
 import java.lang.reflect.Field;
@@ -91,8 +96,8 @@ public class VersionIndependentUtilsImplementation extends BaseVersionIndependen
 		return chunkLoader;
 	}
 
-	public VersionIndependentUtilsImplementation() {
-		super(new DyeColorToMaterialMapper_1_17());
+	public VersionIndependentUtilsImplementation(VersionIndependantLoader loader) {
+		super(loader, new DyeColorToMaterialMapper_1_17());
 		itemBuilderRecordList = new ItemBuilderRecordListv1_17();
 	}
 
@@ -1083,5 +1088,10 @@ public class VersionIndependentUtilsImplementation extends BaseVersionIndependen
 	@Override
 	public GameProfile getGameProfile(Player player) {
 		return ((CraftPlayer) player).getHandle().fp();
+	}
+
+	@Override
+	public BPlayerBoard initPlayerBoard(INetheriteBoard netheriteBoard, Player player, Scoreboard scoreboard, String name) throws Exception {
+		return new PlayerBoardV1_18_R1(netheriteBoard, player, scoreboard, name);
 	}
 }

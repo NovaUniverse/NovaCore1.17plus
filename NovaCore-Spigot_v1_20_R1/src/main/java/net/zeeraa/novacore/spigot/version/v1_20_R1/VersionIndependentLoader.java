@@ -1,4 +1,4 @@
-package net.zeeraa.novacore.spigot.version.v1_19_R1;
+package net.zeeraa.novacore.spigot.version.v1_20_R1;
 
 import net.novauniverse.spigot.version.shared.v1_16plus.NativeParticleImplementation;
 import net.zeeraa.novacore.spigot.abstraction.CommandRegistrator;
