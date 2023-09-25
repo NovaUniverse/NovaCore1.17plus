@@ -17,7 +17,6 @@ import net.novauniverse.novacore1_17plus.shared.BaseVersionIndependentUtilImplem
 import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17;
 import net.zeeraa.novacore.commons.utils.ListUtils;
 import net.zeeraa.novacore.spigot.abstraction.ChunkLoader;
-import net.zeeraa.novacore.spigot.abstraction.INetheriteBoard;
 import net.zeeraa.novacore.spigot.abstraction.ItemBuilderRecordList;
 import net.zeeraa.novacore.spigot.abstraction.MaterialNameList;
 import net.zeeraa.novacore.spigot.abstraction.VersionIndependentItems;
@@ -40,7 +39,6 @@ import org.bukkit.World;
 import net.zeeraa.novacore.spigot.abstraction.commons.EntityBoundingBox;
 import net.zeeraa.novacore.spigot.abstraction.log.AbstractionLogger;
 import net.zeeraa.novacore.spigot.abstraction.manager.CustomSpectatorManager;
-import net.zeeraa.novacore.spigot.abstraction.netheriteboard.BPlayerBoard;
 
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
@@ -71,7 +69,6 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.server.MinecraftServer;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.util.RayTraceResult;
 
 import java.text.DecimalFormat;
@@ -1072,10 +1069,5 @@ public class VersionIndependentUtilsImplementation extends BaseVersionIndependen
 	@Override
 	public GameProfile getGameProfile(Player player) {
 		return ((CraftPlayer) player).getHandle().fq();
-	}
-
-	@Override
-	public BPlayerBoard initPlayerBoard(INetheriteBoard netheriteBoard, Player player, Scoreboard scoreboard, String name) throws Exception {
-		return new PlayerBoardV1_18_R2(netheriteBoard, player, scoreboard, name);
 	}
 }
