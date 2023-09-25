@@ -44,7 +44,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.util.RayTraceResult;
 
 import com.mojang.authlib.GameProfile;
@@ -65,7 +64,6 @@ import net.novauniverse.novacore1_17plus.shared.BaseVersionIndependentUtilImplem
 import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17;
 import net.zeeraa.novacore.commons.utils.ListUtils;
 import net.zeeraa.novacore.spigot.abstraction.ChunkLoader;
-import net.zeeraa.novacore.spigot.abstraction.INetheriteBoard;
 import net.zeeraa.novacore.spigot.abstraction.ItemBuilderRecordList;
 import net.zeeraa.novacore.spigot.abstraction.MaterialNameList;
 import net.zeeraa.novacore.spigot.abstraction.VersionIndependentItems;
@@ -80,7 +78,6 @@ import net.zeeraa.novacore.spigot.abstraction.enums.VersionIndependentMaterial;
 import net.zeeraa.novacore.spigot.abstraction.enums.VersionIndependentSound;
 import net.zeeraa.novacore.spigot.abstraction.log.AbstractionLogger;
 import net.zeeraa.novacore.spigot.abstraction.manager.CustomSpectatorManager;
-import net.zeeraa.novacore.spigot.abstraction.netheriteboard.BPlayerBoard;
 
 public class VersionIndependentUtilsImplementation extends BaseVersionIndependentUtilImplementation1_17Plus {
 	private ItemBuilderRecordList itemBuilderRecordList;
@@ -1078,10 +1075,5 @@ public class VersionIndependentUtilsImplementation extends BaseVersionIndependen
 	@Override
 	public GameProfile getGameProfile(Player player) {
 		return ((CraftPlayer) player).getHandle().fD();
-	}
-
-	@Override
-	public BPlayerBoard initPlayerBoard(INetheriteBoard netheriteBoard, Player player, Scoreboard scoreboard, String name) throws Exception {
-		return new PlayerBoardV1_19_R2(netheriteBoard, player, scoreboard, name);
 	}
 }
