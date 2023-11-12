@@ -41,6 +41,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.RayTraceResult;
@@ -48,6 +49,7 @@ import org.bukkit.util.RayTraceResult;
 import com.mojang.authlib.GameProfile;
 
 import net.minecraft.core.BlockPosition;
+import net.minecraft.nbt.GameProfileSerializer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
@@ -61,6 +63,7 @@ import net.minecraft.world.level.block.state.BlockBase;
 import net.minecraft.world.phys.AxisAlignedBB;
 import net.novauniverse.novacore1_17plus.shared.BaseVersionIndependentUtilImplementation1_17Plus;
 import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17;
+import net.zeeraa.novacore.commons.log.Log;
 import net.zeeraa.novacore.commons.utils.ListUtils;
 import net.zeeraa.novacore.spigot.abstraction.ChunkLoader;
 import net.zeeraa.novacore.spigot.abstraction.ItemBuilderRecordList;
@@ -1065,5 +1068,18 @@ public class VersionIndependentUtilsImplementation extends BaseVersionIndependen
 	@Override
 	public GameProfile getGameProfile(Player player) {
 		return ((CraftPlayer) player).getHandle().fQ();
+	}
+
+	@Override
+	protected void preProcessHeadMetaApplication(ItemMeta meta, GameProfile profile, ItemStack stack) {
+		NBTTagCompound serializedProfile = GameProfileSerializer.a(new NBTTagCompound(), profile);
+		try {
+			Field field = meta.getClass().getDeclaredField("serializedProfile");
+			field.setAccessible(true);
+			field.set(meta, serializedProfile);
+		} catch (Exception e) {
+			Log.error("NovaCore 1.20.2", "Failed to patch skull meta. " + e.getClass().getName() + " " + e.getMessage());
+			e.printStackTrace();
+		}
 	}
 }
