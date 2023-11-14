@@ -29,12 +29,14 @@
                 <executions>
                     <execution>
                         <id>compile</id>
+                        <phase>compile</phase>
                         <goals>
                             <goal>compile</goal>
                         </goals>
                         <configuration>
                             <sourceDirs>
-                                <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
+                                <source>src/main/kotlin</source>
+                                <source>target/generated-sources/annotations</source>
                             </sourceDirs>
                         </configuration>
                     </execution>
@@ -55,6 +57,10 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin-version}</version>
+                <configuration>
+                    <source>${source-version}</source>
+                    <target>${target-version}</target>
+                </configuration>
                 <executions>
                     <execution>
                         <id>default-compile</id>
