@@ -622,14 +622,7 @@ class VersionIndependentUtilsImplementation(loader: VersionIndependantLoader) : 
 	override fun setSource(tnt: TNTPrimed, source: LivingEntity) {
 		val etp = (tnt as CraftTNTPrimed).handle
 		val el = (source as CraftLivingEntity).handle
-		try {
-			val f = etp.javaClass.getDeclaredField("d")
-			f.isAccessible = true
-			f[etp] = el
-		} catch (e: Exception) {
-			AbstractionLogger.getLogger().error("VersionIndependentUtils", "Could not set TNT's source. Entity UUID: " + tnt.getUniqueId() + " Entity ID: " + tnt.getEntityId())
-			e.printStackTrace()
-		}
+		etp.d = el
 	}
 
 	override fun spawnCustomEntity(entity: Any, location: Location) {

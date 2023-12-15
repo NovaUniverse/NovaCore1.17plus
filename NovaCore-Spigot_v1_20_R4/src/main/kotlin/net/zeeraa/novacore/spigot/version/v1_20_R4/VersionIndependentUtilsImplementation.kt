@@ -1,7 +1,9 @@
-package net.zeeraa.novacore.spigot.version.v1_19_R3
+package net.zeeraa.novacore.spigot.version.v1_20_R2
 
 import com.mojang.authlib.GameProfile
 import net.minecraft.core.BlockPosition
+import net.minecraft.nbt.GameProfileSerializer
+import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.nbt.NBTTagList
 import net.minecraft.nbt.NBTTagString
 import net.minecraft.network.protocol.Packet
@@ -12,6 +14,7 @@ import net.minecraft.world.entity.item.EntityFallingBlock
 import net.minecraft.world.level.block.state.BlockBase
 import net.novauniverse.novacore1_17plus.shared.BaseVersionIndependentUtilImplementation1_17Plus
 import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17
+import net.zeeraa.novacore.commons.log.Log
 import net.zeeraa.novacore.commons.utils.ListUtils
 import net.zeeraa.novacore.spigot.abstraction.ChunkLoader
 import net.zeeraa.novacore.spigot.abstraction.ItemBuilderRecordList
@@ -26,10 +29,14 @@ import org.bukkit.*
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.block.Block
-import org.bukkit.craftbukkit.v1_19_R3.CraftWorld
-import org.bukkit.craftbukkit.v1_19_R3.entity.*
-import org.bukkit.craftbukkit.v1_19_R3.inventory.CraftItemStack
-import org.bukkit.craftbukkit.v1_19_R3.util.CraftMagicNumbers
+import org.bukkit.craftbukkit.v1_20_R3.CraftWorld
+import org.bukkit.craftbukkit.v1_20_R3.entity.CraftEntity
+import org.bukkit.craftbukkit.v1_20_R3.entity.CraftFallingBlock
+import org.bukkit.craftbukkit.v1_20_R3.entity.CraftLivingEntity
+import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer
+import org.bukkit.craftbukkit.v1_20_R3.entity.CraftTNTPrimed
+import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack
+import org.bukkit.craftbukkit.v1_20_R3.util.CraftMagicNumbers
 import org.bukkit.entity.*
 import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.event.entity.EntityDamageByBlockEvent
@@ -69,7 +76,7 @@ class VersionIndependentUtilsImplementation(loader: VersionIndependentLoader?) :
 		// TODO: implement this
 		if (!damagePlayerWarningShown) {
 			damagePlayerWarningShown = true
-			AbstractionLogger.getLogger().warning("Nova VersionIndependentUtils v1_19_R3", "damagePlayer will not work on 1.17 and will instead call Player#damage(double)")
+			AbstractionLogger.getLogger().warning("Nova VersionIndependentUtils v1_20_R1", "damagePlayer will not work on 1.17 and will instead call Player#damage(double)")
 		}
 		player.damage(damage.toDouble())
 
@@ -265,7 +272,7 @@ class VersionIndependentUtilsImplementation(loader: VersionIndependentLoader?) :
 	}
 
 	override fun getNovaCoreGameVersion(): NovaCoreGameVersion {
-		return NovaCoreGameVersion.V_1_19_R3
+		return NovaCoreGameVersion.V_1_20_R4
 	}
 
 	init {
@@ -287,7 +294,7 @@ class VersionIndependentUtilsImplementation(loader: VersionIndependentLoader?) :
 
 	override fun getPlayerBodyRotation(player: Player): Float {
 		val craftPlayer = player as CraftPlayer
-		return craftPlayer.handle.aU
+		return craftPlayer.handle.aT
 	}
 
 	@Suppress("DEPRECATION")
@@ -443,12 +450,12 @@ class VersionIndependentUtilsImplementation(loader: VersionIndependentLoader?) :
 	override fun canBreakBlock(itemStack: ItemStack, material: Material): Boolean {
 		val nmsItem = CraftItemStack.asNMSCopy(itemStack)
 		val nbtTag = nmsItem.v()
-		val list = nbtTag.c("CanDestroy", 8) ?: return false
+		val list = nbtTag!!.c("CanDestroy", 8) ?: return false
 		try {
 			val f = NBTTagList::class.java.getDeclaredField("c")
 			f.isAccessible = true
 			for (nbt in f[list] as List<NBTTagString>) {
-				val b = getMaterialFromName(nbt.f_()) == material
+				val b = getMaterialFromName(nbt.t_()) == material
 				if (b) {
 					return true
 				}
@@ -481,7 +488,7 @@ class VersionIndependentUtilsImplementation(loader: VersionIndependentLoader?) :
 
 	override fun sendPacket(player: Player, packet: Any) {
 		if (packet is Packet<*>) {
-			(player as CraftPlayer).handle.b.a(packet)
+			(player as CraftPlayer).handle.c.a(packet)
 		} else {
 			AbstractionLogger.getLogger().warning("NovaCore", "Packet sent isn't instance of " + Packet::class.java.canonicalName)
 		}
@@ -548,7 +555,7 @@ class VersionIndependentUtilsImplementation(loader: VersionIndependentLoader?) :
 
 	override fun displayTotem(player: Player) {
 		val packet = PacketPlayOutEntityStatus((player as CraftPlayer).handle, 35.toByte())
-		player.handle.b.a(packet)
+		player.handle.c.a(packet)
 	}
 
 	override fun displayCustomTotem(player: Player, cmd: Int) {
@@ -559,7 +566,7 @@ class VersionIndependentUtilsImplementation(loader: VersionIndependentLoader?) :
 		val hand = player.inventory.itemInMainHand
 		player.inventory.setItemInMainHand(totem)
 		val packet = PacketPlayOutEntityStatus((player as CraftPlayer).handle, 35.toByte())
-		player.handle.b.a(packet)
+		player.handle.c.a(packet)
 		player.getInventory().setItemInMainHand(hand)
 	}
 
@@ -598,7 +605,7 @@ class VersionIndependentUtilsImplementation(loader: VersionIndependentLoader?) :
 
 	override fun getEntityBoundingBox(entity: org.bukkit.entity.Entity): EntityBoundingBox {
 		val nmsEntity = (entity as CraftEntity).handle
-		val aabb = nmsEntity.cD()
+		val aabb = nmsEntity.cH()
 		val df = DecimalFormat("0.00")
 		val currentWidth = aabb.d - entity.getLocation().x
 		val currentHeight = aabb.e - entity.getLocation().y
@@ -610,7 +617,7 @@ class VersionIndependentUtilsImplementation(loader: VersionIndependentLoader?) :
 	override fun setSource(tnt: TNTPrimed, source: LivingEntity) {
 		val etp = (tnt as CraftTNTPrimed).handle
 		val el = (source as CraftLivingEntity).handle
-		etp.d = el
+		etp.g = el
 	}
 
 	override fun spawnCustomEntity(entity: Any, location: Location) {
@@ -642,7 +649,19 @@ class VersionIndependentUtilsImplementation(loader: VersionIndependentLoader?) :
 	}
 
 	override fun getGameProfile(player: Player): GameProfile {
-		return (player as CraftPlayer).handle.fI()
+		return (player as CraftPlayer).handle.fR()
+	}
+
+	override fun preProcessHeadMetaApplication(meta: ItemMeta, profile: GameProfile, stack: ItemStack) {
+		val serializedProfile = GameProfileSerializer.a(NBTTagCompound(), profile)
+		try {
+			val field = meta.javaClass.getDeclaredField("serializedProfile")
+			field.isAccessible = true
+			field[meta] = serializedProfile
+		} catch (e: Exception) {
+			Log.error("NovaCore 1.20.2", "Failed to patch skull meta. " + e.javaClass.name + " " + e.message)
+			e.printStackTrace()
+		}
 	}
 
 	companion object {
