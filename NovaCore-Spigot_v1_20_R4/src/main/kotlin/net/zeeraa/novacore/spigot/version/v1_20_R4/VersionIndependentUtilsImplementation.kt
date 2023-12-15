@@ -1,4 +1,4 @@
-package net.zeeraa.novacore.spigot.version.v1_20_R2
+package net.zeeraa.novacore.spigot.version.v1_20_R4
 
 import com.mojang.authlib.GameProfile
 import net.minecraft.core.BlockPosition
@@ -231,7 +231,7 @@ class VersionIndependentUtilsImplementation(loader: VersionIndependentLoader?) :
 	}
 
 	override fun getVersionIndependantItems(): VersionIndependentItems {
-		return VersionIndependantItemsImplementation()
+		return VersionIndependentItemsImplementation()
 	}
 
 	override fun getMaterial(material: VersionIndependentMaterial): Material? {

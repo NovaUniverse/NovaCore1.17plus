@@ -1,12 +1,12 @@
-package net.zeeraa.novacore.spigot.version.v1_20_R2
+package net.zeeraa.novacore.spigot.version.v1_20_R4
 
 import net.zeeraa.novacore.spigot.abstraction.CommandRegistrator
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandMap
 import org.bukkit.command.SimpleCommandMap
-import org.bukkit.craftbukkit.v1_20_R2.CraftServer
-import org.bukkit.craftbukkit.v1_20_R2.command.CraftCommandMap
+import org.bukkit.craftbukkit.v1_20_R3.CraftServer
+import org.bukkit.craftbukkit.v1_20_R3.command.CraftCommandMap
 import org.bukkit.plugin.Plugin
 
 /**

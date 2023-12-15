@@ -227,7 +227,7 @@ class VersionIndependentUtilsImplementation(loader: VersionIndependentLoader?) :
 	}
 
 	override fun getVersionIndependantItems(): VersionIndependentItems {
-		return VersionIndependantItemsImplementation()
+		return VersionIndependentItemsImplementation()
 	}
 
 	override fun getMaterial(material: VersionIndependentMaterial): Material? {

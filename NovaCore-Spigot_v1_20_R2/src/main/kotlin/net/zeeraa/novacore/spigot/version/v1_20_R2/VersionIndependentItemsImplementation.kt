@@ -4,7 +4,7 @@ import net.zeeraa.novacore.spigot.abstraction.VersionIndependentItems
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
-class VersionIndependantItemsImplementation : VersionIndependentItems() {
+class VersionIndependentItemsImplementation : VersionIndependentItems() {
 	override fun getPlayerSkull(): ItemStack {
 		return ItemStack(Material.PLAYER_HEAD, 1)
 	}
