@@ -14,6 +14,7 @@ import net.novauniverse.novacore1_17plus.shared.BaseVersionIndependentUtilImplem
 import net.novauniverse.novacore1_17plus.shared.DyeColorToMaterialMapper_1_17
 import net.zeeraa.novacore.commons.utils.ListUtils
 import net.zeeraa.novacore.spigot.abstraction.*
+import net.zeeraa.novacore.spigot.abstraction.VersionIndependentLoader
 import net.zeeraa.novacore.spigot.abstraction.commons.AttributeInfo
 import net.zeeraa.novacore.spigot.abstraction.commons.EntityBoundingBox
 import net.zeeraa.novacore.spigot.abstraction.enums.*
@@ -41,7 +42,7 @@ import java.text.DecimalFormat
 import java.util.*
 import java.util.function.Consumer
 
-class VersionIndependentUtilsImplementation(loader: VersionIndependantLoader) : BaseVersionIndependentUtilImplementation1_17Plus(loader, DyeColorToMaterialMapper_1_17()) {
+class VersionIndependentUtilsImplementation(loader: VersionIndependentLoader) : BaseVersionIndependentUtilImplementation1_17Plus(loader, DyeColorToMaterialMapper_1_17()) {
 	private val itemBuilderRecordList: ItemBuilderRecordList
 	private var damagePlayerWarningShown = false
 	private var chunkLoader: ChunkLoader? = null
