@@ -2,9 +2,9 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>novacore-spigot_v1_20_R4</artifactId>
-    <name>NovaCore_v1_20_R4</name>
-    <version>v1_20_R4-SNAPSHOT</version>
+    <artifactId>novacore-spigot_v1_20_R3</artifactId>
+    <name>NovaCore_v1_20_R3</name>
+    <version>v1_20_R3-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <parent>

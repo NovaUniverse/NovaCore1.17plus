@@ -1,4 +1,4 @@
-package net.zeeraa.novacore.spigot.version.v1_20_R4
+package net.zeeraa.novacore.spigot.version.v1_20_R3
 
 import net.zeeraa.novacore.spigot.abstraction.CommandRegistrator
 import org.bukkit.Bukkit
