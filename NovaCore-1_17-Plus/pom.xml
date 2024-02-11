@@ -317,5 +317,13 @@
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>net.novauniverse.novacore</groupId>
+            <artifactId>novacore-spigot_v1_20_R3</artifactId>
+            <version>v1_20_R3-SNAPSHOT</version>
+            <type>jar</type>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 </project>
