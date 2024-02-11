@@ -7,7 +7,6 @@
     <packaging>pom</packaging>
     <version>PARENT1_17</version>
     <name>NovaCore 1.17 plus Parent</name>
-
     <url>https://zeeraa.net</url>
 
     <properties>
