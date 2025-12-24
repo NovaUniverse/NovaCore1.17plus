@@ -172,8 +172,8 @@
     </parent>
     <repositories>
         <repository>
-            <id>novauniverse2</id>
-            <url>https://nexus2.novauniverse.net/repository/novauniverse-group/</url>
+            <id>novauniverse</id>
+            <url>https://nexus.novauniverse.net/repository/novauniverse-group/</url>
         </repository>
 
         <repository>
